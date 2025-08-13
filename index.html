@@ -17,8 +17,7 @@
       }
     </script>
     <script type="module" src="index.tsx"></script>
-  <link rel="stylesheet" href="/index.css">
-</head>
+  </head>
   <body>
     <main>
       <header>
@@ -30,129 +29,152 @@
       <section class="controls">
         <form id="email-form">
           <h2>Customize Your Email</h2>
+          <div class="form-group">
+            <label for="font-family">Email Font</label>
+            <select id="font-family" name="font-family">
+              <option value="'Arial', sans-serif" style="font-family: 'Arial', sans-serif;">Arial</option>
+              <option value="'Courier New', Courier, monospace" style="font-family: 'Courier New', Courier, monospace;">Courier New</option>
+              <option value="'Georgia', serif" style="font-family: 'Georgia', serif;">Georgia</option>
+              <option value="'Helvetica', sans-serif" style="font-family: 'Helvetica', sans-serif;">Helvetica</option>
+              <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif" style="font-family: 'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;">Lucida Sans</option>
+              <option value="'Tahoma', sans-serif" style="font-family: 'Tahoma', sans-serif;">Tahoma</option>
+              <option value="'Times New Roman', Times, serif" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
+              <option value="'Trebuchet MS', 'Helvetica', sans-serif" style="font-family: 'Trebuchet MS', 'Helvetica', sans-serif;">Trebuchet MS</option>
+              <option value="'Verdana', sans-serif" style="font-family: 'Verdana', sans-serif;">Verdana</option>
+            </select>
+          </div>
           <!-- Merge Fields Section -->
           <div class="merge-fields-container">
             <h3>Insert Merge Field</h3>
             <div class="merge-fields-list">
               <div class="merge-field-group">
-                <h4>Recipient & Dealer</h4>
-                <div class="merge-field-item" data-value="{{recipient.first_name}}">
-                  <span>Recipient First Name</span><code>{{recipient.first_name}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.name}}">
-                  <span>Dealership Name</span><code>{{dealership.name}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.phone_number}}">
-                  <span>Dealership Phone</span><code>{{dealership.phone_number}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.address}}">
-                  <span>Dealership Address</span><code>{{dealership.address}}</code>
-                </div>
-                 <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
-                  <span>Dealership Website</span><code>{{dealership.website_homepage_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.sales.representative.name}}">
-                  <span>Sales Rep Name</span><code>{{dealership.sales.representative.name}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.sales.representative.title}}">
-                  <span>Sales Rep Title</span><code>{{dealership.sales.representative.title}}</code>
+                <button type="button" class="category-toggle">
+                  Recipient & Dealer
+                  <span class="toggle-icon"></span>
+                </button>
+                <div class="category-content">
+                  <div class="merge-field-item" data-value="{{recipient.first_name}}">
+                    <span>Recipient First Name</span><code>{{recipient.first_name}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.name}}">
+                    <span>Dealership Name</span><code>{{dealership.name}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.phone_number}}">
+                    <span>Dealership Phone</span><code>{{dealership.phone_number}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.address}}">
+                    <span>Dealership Address</span><code>{{dealership.address}}</code>
+                  </div>
+                   <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
+                    <span>Dealership Website</span><code>{{dealership.website_homepage_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.sales.representative.name}}">
+                    <span>Sales Rep Name</span><code>{{dealership.sales.representative.name}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.sales.representative.title}}">
+                    <span>Sales Rep Title</span><code>{{dealership.sales.representative.title}}</code>
+                  </div>
                 </div>
               </div>
               <div class="merge-field-group">
-                <h4>Customer Vehicle & Transaction</h4>
-                <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.year}}">
-                  <span>Vehicle Year</span><code>{{customer.last_transaction.vehicle.year}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.make}}">
-                  <span>Vehicle Make</span><code>{{customer.last_transaction.vehicle.make}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
-                  <span>Vehicle Model</span><code>{{customer.last_transaction.vehicle.model}}</code>
-                </div>
-                 <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.vin}}">
-                  <span>Vehicle VIN</span><code>{{customer.last_transaction.vehicle.vin}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.equity_payout_formatted}}">
-                  <span>Equity Payout</span><code>{{customer.last_transaction.vehicle.equity_payout_formatted}}</code>
-                </div>
-              </div>
-               <div class="merge-field-group">
-                <h4>Website Links</h4>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
-                    <span>Tracked Homepage (No LP)</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
-                    <span>Tracked Service (No LP)</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
-                    <span>Homepage URL</span><code>{{dealership.website_homepage_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_url}}">
-                    <span>Tracked Accessories</span><code>{{dealership.tracked_website_accessories_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_no_lp_url}}">
-                    <span>Tracked Accessories (No LP)</span><code>{{dealership.tracked_website_accessories_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_url}}">
-                    <span>Tracked Body Shop</span><code>{{dealership.tracked_website_body_shop_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_no_lp_url}}">
-                    <span>Tracked Body Shop (No LP)</span><code>{{dealership.tracked_website_body_shop_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_url}}">
-                    <span>Tracked Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_no_lp_url}}">
-                    <span>Tracked Service Scheduler (No LP)</span><code>{{dealership.tracked_website_service_scheduler_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_url}}">
-                    <span>Tracked Service Specials</span><code>{{dealership.tracked_website_service_specials_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_no_lp_url}}">
-                    <span>Tracked Service Specials (No LP)</span><code>{{dealership.tracked_website_service_specials_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.website_service_customer_reviews_url}}">
-                    <span>Service Reviews URL</span><code>{{dealership.website_service_customer_reviews_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_url}}">
-                    <span>Tracked Service Reviews</span><code>{{dealership.tracked_website_service_customer_reviews_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_no_lp_url}}">
-                    <span>Tracked Service Reviews (No LP)</span><code>{{dealership.tracked_website_service_customer_reviews_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_url}}">
-                    <span>Tracked Tires</span><code>{{dealership.tracked_website_tires_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_no_lp_url}}">
-                    <span>Tracked Tires (No LP)</span><code>{{dealership.tracked_website_tires_no_lp_url}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}">
-                    <span>Tracked Vehicle Acquisition (No LP)</span><code>{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}</code>
-                </div>
-              </div>
-               <div class="merge-field-group">
-                  <h4>Recall Data</h4>
-                  <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_campaign_number}}">
-                      <span>Recall Campaign Number</span><code>{{customer.last_sold_vehicle.recall_campaign_number}}</code>
+                <button type="button" class="category-toggle">
+                  Customer Vehicle & Transaction
+                  <span class="toggle-icon"></span>
+                </button>
+                <div class="category-content">
+                  <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.year}}">
+                    <span>Vehicle Year</span><code>{{customer.last_transaction.vehicle.year}}</code>
                   </div>
-                  <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_description}}">
-                      <span>Recall Description</span><code>{{customer.last_sold_vehicle.recall_description}}</code>
+                  <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.make}}">
+                    <span>Vehicle Make</span><code>{{customer.last_transaction.vehicle.make}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
+                    <span>Vehicle Model</span><code>{{customer.last_transaction.vehicle.model}}</code>
+                  </div>
+                   <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.vin}}">
+                    <span>Vehicle VIN</span><code>{{customer.last_transaction.vehicle.vin}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.equity_payout_formatted}}">
+                    <span>Equity Payout</span><code>{{customer.last_transaction.vehicle.equity_payout_formatted}}</code>
+                  </div>
+                </div>
+              </div>
+               <div class="merge-field-group">
+                <button type="button" class="category-toggle">
+                  Website Links
+                  <span class="toggle-icon"></span>
+                </button>
+                <div class="category-content">
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
+                      <span>Tracked Homepage (No LP)</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
+                      <span>Tracked Service (No LP)</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
+                      <span>Homepage URL</span><code>{{dealership.website_homepage_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_url}}">
+                      <span>Tracked Accessories</span><code>{{dealership.tracked_website_accessories_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_no_lp_url}}">
+                      <span>Tracked Accessories (No LP)</span><code>{{dealership.tracked_website_accessories_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_url}}">
+                      <span>Tracked Body Shop</span><code>{{dealership.tracked_website_body_shop_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_no_lp_url}}">
+                      <span>Tracked Body Shop (No LP)</span><code>{{dealership.tracked_website_body_shop_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_url}}">
+                      <span>Tracked Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_no_lp_url}}">
+                      <span>Tracked Service Scheduler (No LP)</span><code>{{dealership.tracked_website_service_scheduler_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_url}}">
+                      <span>Tracked Service Specials</span><code>{{dealership.tracked_website_service_specials_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_no_lp_url}}">
+                      <span>Tracked Service Specials (No LP)</span><code>{{dealership.tracked_website_service_specials_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.website_service_customer_reviews_url}}">
+                      <span>Service Reviews URL</span><code>{{dealership.website_service_customer_reviews_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_url}}">
+                      <span>Tracked Service Reviews</span><code>{{dealership.tracked_website_service_customer_reviews_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_no_lp_url}}">
+                      <span>Tracked Service Reviews (No LP)</span><code>{{dealership.tracked_website_service_customer_reviews_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_url}}">
+                      <span>Tracked Tires</span><code>{{dealership.tracked_website_tires_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_no_lp_url}}">
+                      <span>Tracked Tires (No LP)</span><code>{{dealership.tracked_website_tires_no_lp_url}}</code>
+                  </div>
+                  <div class="merge-field-item" data-value="{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}">
+                      <span>Tracked Vehicle Acquisition (No LP)</span><code>{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}</code>
+                  </div>
+                </div>
+              </div>
+               <div class="merge-field-group">
+                  <button type="button" class="category-toggle">
+                    Recall Data
+                    <span class="toggle-icon"></span>
+                  </button>
+                  <div class="category-content">
+                    <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_campaign_number}}">
+                        <span>Recall Campaign Number</span><code>{{customer.last_sold_vehicle.recall_campaign_number}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_description}}">
+                        <span>Recall Description</span><code>{{customer.last_sold_vehicle.recall_description}}</code>
+                    </div>
                   </div>
               </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label for="subject">Email Subject</label>
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              placeholder="e.g., An Exclusive Offer Just for You!"
-              required
-            />
-          </div>
-          
           <div class="form-group">
             <label for="photo">Add a Hero Image (optional)</label>
             <input
@@ -211,7 +233,7 @@
 
           <!-- Offers Section -->
           <div class="offers-section">
-            <h2>Promotional Offers (optional, max 3)</h2>
+            <h2>Promotional Offers (optional, max 5)</h2>
             <div id="offers-container">
               <!-- Offer 1 -->
               <div class="offer-block" id="offer-block-1">
@@ -223,7 +245,7 @@
                     <label for="offer_image_1">Offer Image</label>
                     <img
                       id="offer_image_preview_1"
-                      src="https://placehold.co/100x100/f1f3f5/6c757d?text=Image"
+                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
                       alt="Offer 1 image preview"
                       class="offer-image-preview"
                     />
@@ -317,7 +339,7 @@
                     <label for="offer_image_2">Offer Image</label>
                     <img
                       id="offer_image_preview_2"
-                      src="https://placehold.co/100x100/f1f3f5/6c757d?text=Image"
+                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
                       alt="Offer 2 image preview"
                       class="offer-image-preview"
                     />
@@ -411,7 +433,7 @@
                     <label for="offer_image_3">Offer Image</label>
                     <img
                       id="offer_image_preview_3"
-                      src="https://placehold.co/100x100/f1f3f5/6c757d?text=Image"
+                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
                       alt="Offer 3 image preview"
                       class="offer-image-preview"
                     />
@@ -487,10 +509,267 @@
                   </div>
                 </div>
               </div>
+              <!-- Offer 4 (hidden) -->
+              <div class="offer-block" id="offer-block-4" style="display: none">
+                <div class="offer-header">
+                  <h3>Offer 4</h3>
+                  <button
+                    type="button"
+                    class="remove-offer-btn"
+                    data-offer-num="4"
+                    aria-label="Remove Offer 4"
+                  >
+                    &times;
+                  </button>
+                </div>
+                <div class="offer-body">
+                  <div class="img-upload-wrapper">
+                    <label for="offer_image_4">Offer Image</label>
+                    <img
+                      id="offer_image_preview_4"
+                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
+                      alt="Offer 4 image preview"
+                      class="offer-image-preview"
+                    />
+                    <input
+                      type="file"
+                      id="offer_image_4"
+                      name="offer_image_4"
+                      accept="image/png, image/jpeg"
+                      class="offer-image-input"
+                    />
+                  </div>
+                  <div class="offer-details-wrapper">
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_4">Vehicle / Product</label
+                      ><input
+                        type="text"
+                        id="offer_vehicle_4"
+                        name="offer_vehicle_4"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_title_4">Offer Title</label
+                      ><input
+                        type="text"
+                        id="offer_title_4"
+                        name="offer_title_4"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_details_4">Offer Details</label
+                      ><textarea
+                        id="offer_details_4"
+                        name="offer_details_4"
+                        rows="3"
+                        placeholder="e.g., 36-month lease, $3,000 down."
+                      ></textarea>
+                    </div>
+                    <div class="form-group-grid three-col">
+                      <div>
+                        <label for="offer_cta_text_4">CTA Text</label
+                        ><input
+                          type="text"
+                          id="offer_cta_text_4"
+                          name="offer_cta_text_4"
+                          placeholder="View Inventory"
+                        />
+                      </div>
+                      <div>
+                        <label for="offer_cta_link_4">CTA Link</label
+                        ><input
+                          type="text"
+                          id="offer_cta_link_4"
+                          name="offer_cta_link_4"
+                          placeholder="https://example.com/specials"
+                        />
+                      </div>
+                       <div>
+                        <label for="offer_cta_color_4">CTA Color</label>
+                        <input type="color" id="offer_cta_color_4" name="offer_cta_color_4" value="#4f46e5">
+                      </div>
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_disclaimer_4">Disclaimer</label
+                      ><textarea
+                        id="offer_disclaimer_4"
+                        name="offer_disclaimer_4"
+                        rows="2"
+                        placeholder="e.g., W.A.C. See dealer for details."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Offer 5 (hidden) -->
+              <div class="offer-block" id="offer-block-5" style="display: none">
+                <div class="offer-header">
+                  <h3>Offer 5</h3>
+                  <button
+                    type="button"
+                    class="remove-offer-btn"
+                    data-offer-num="5"
+                    aria-label="Remove Offer 5"
+                  >
+                    &times;
+                  </button>
+                </div>
+                <div class="offer-body">
+                  <div class="img-upload-wrapper">
+                    <label for="offer_image_5">Offer Image</label>
+                    <img
+                      id="offer_image_preview_5"
+                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
+                      alt="Offer 5 image preview"
+                      class="offer-image-preview"
+                    />
+                    <input
+                      type="file"
+                      id="offer_image_5"
+                      name="offer_image_5"
+                      accept="image/png, image/jpeg"
+                      class="offer-image-input"
+                    />
+                  </div>
+                  <div class="offer-details-wrapper">
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_5">Vehicle / Product</label
+                      ><input
+                        type="text"
+                        id="offer_vehicle_5"
+                        name="offer_vehicle_5"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_title_5">Offer Title</label
+                      ><input
+                        type="text"
+                        id="offer_title_5"
+                        name="offer_title_5"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_details_5">Offer Details</label
+                      ><textarea
+                        id="offer_details_5"
+                        name="offer_details_5"
+                        rows="3"
+                        placeholder="e.g., 36-month lease, $3,000 down."
+                      ></textarea>
+                    </div>
+                    <div class="form-group-grid three-col">
+                      <div>
+                        <label for="offer_cta_text_5">CTA Text</label
+                        ><input
+                          type="text"
+                          id="offer_cta_text_5"
+                          name="offer_cta_text_5"
+                          placeholder="View Inventory"
+                        />
+                      </div>
+                      <div>
+                        <label for="offer_cta_link_5">CTA Link</label
+                        ><input
+                          type="text"
+                          id="offer_cta_link_5"
+                          name="offer_cta_link_5"
+                          placeholder="https://example.com/specials"
+                        />
+                      </div>
+                       <div>
+                        <label for="offer_cta_color_5">CTA Color</label>
+                        <input type="color" id="offer_cta_color_5" name="offer_cta_color_5" value="#4f46e5">
+                      </div>
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_disclaimer_5">Disclaimer</label
+                      ><textarea
+                        id="offer_disclaimer_5"
+                        name="offer_disclaimer_5"
+                        rows="2"
+                        placeholder="e.g., W.A.C. See dealer for details."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <button type="button" id="add-offer-btn" class="secondary-btn">
               Add Another Offer
             </button>
+          </div>
+
+          <!-- Footer CTAs Section -->
+          <div class="footer-ctas-section">
+            <h2>Footer Call to Actions (optional, max 3)</h2>
+            <p>These links will appear at the bottom of the email, useful for secondary actions.</p>
+            <div class="form-group-grid two-col">
+                <div class="form-group">
+                    <label for="footer_bg_color">Section Background</label>
+                    <input type="color" id="footer_bg_color" name="footer_bg_color" value="#ffffff">
+                </div>
+                <div class="form-group">
+                    <label for="footer_cta_text_color">Link Color</label>
+                    <input type="color" id="footer_cta_text_color" name="footer_cta_text_color" value="#4f46e5">
+                </div>
+            </div>
+            <div id="footer-ctas-container">
+              <!-- CTA 1 -->
+              <div class="footer-cta-block" id="footer-cta-block-1">
+                 <div class="footer-cta-header">
+                    <h4>Link 1</h4>
+                 </div>
+                <div class="form-group-grid two-col">
+                  <div>
+                    <label for="footer_cta_text_1">Link Text</label>
+                    <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" value="Get In Touch">
+                  </div>
+                  <div>
+                    <label for="footer_cta_link_1">Link URL</label>
+                    <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" value="{{dealership.tracked_website_homepage_no_lp_url}}">
+                  </div>
+                </div>
+              </div>
+              <!-- CTA 2 (hidden) -->
+              <div class="footer-cta-block" id="footer-cta-block-2" style="display: none;">
+                <div class="footer-cta-header">
+                  <h4>Link 2</h4>
+                  <button type="button" class="remove-footer-cta-btn" data-cta-num="2" aria-label="Remove Link 2">&times;</button>
+                </div>
+                <div class="form-group-grid two-col">
+                  <div>
+                    <label for="footer_cta_text_2">Link Text</label>
+                    <input type="text" id="footer_cta_text_2" name="footer_cta_text_2" placeholder="e.g., View Our Inventory">
+                  </div>
+                  <div>
+                    <label for="footer_cta_link_2">Link URL</label>
+                    <input type="text" id="footer_cta_link_2" name="footer_cta_link_2" placeholder="e.g., https://example.com/inventory">
+                  </div>
+                </div>
+              </div>
+              <!-- CTA 3 (hidden) -->
+              <div class="footer-cta-block" id="footer-cta-block-3" style="display: none;">
+                <div class="footer-cta-header">
+                  <h4>Link 3</h4>
+                  <button type="button" class="remove-footer-cta-btn" data-cta-num="3" aria-label="Remove Link 3">&times;</button>
+                </div>
+                <div class="form-group-grid two-col">
+                  <div>
+                    <label for="footer_cta_text_3">Link Text</label>
+                    <input type="text" id="footer_cta_text_3" name="footer_cta_text_3" placeholder="e.g., Schedule Service">
+                  </div>
+                  <div>
+                    <label for="footer_cta_link_3">Link URL</label>
+                    <input type="text" id="footer_cta_link_3" name="footer_cta_link_3" placeholder="e.g., https://example.com/service">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button type="button" id="add-footer-cta-btn" class="secondary-btn">Add Another Link</button>
           </div>
 
           <button type="submit" id="generate-btn">
@@ -525,6 +804,5 @@
         <p>Created by Jayden Wallace © 2025</p>
       </footer>
     </main>
-  <script type="module" src="/index.tsx"></script>
-</body>
+  </body>
 </html>

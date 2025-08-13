@@ -17,6 +17,7 @@ const outputPlaceholder = document.getElementById(
 const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
 const codeBlock = document.getElementById('code-block') as HTMLElement;
 const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
 const addOfferBtn = document.getElementById('add-offer-btn') as HTMLButtonElement;
 const emailBodyTextarea = document.getElementById('email-body') as HTMLTextAreaElement;
 
@@ -367,6 +368,39 @@ const handleCopyClick = async () => {
   }
 };
 
+const handleDownloadClick = () => {
+  if (!codeBlock.textContent) return;
+  
+  // Create a formatted filename with current date and time
+  const now = new Date();
+  const timestamp = now.toISOString().slice(0, 19).replace(/[:.]/g, '-');
+  const filename = `email-template-${timestamp}.html`;
+  
+  // Create a blob with the HTML content
+  const blob = new Blob([codeBlock.textContent], { type: 'text/html' });
+  
+  // Create a temporary download link
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  
+  // Trigger the download
+  document.body.appendChild(link);
+  link.click();
+  
+  // Clean up
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  // Update button text temporarily
+  const originalText = downloadBtn.textContent;
+  downloadBtn.textContent = 'Downloaded!';
+  setTimeout(() => {
+    downloadBtn.textContent = originalText;
+  }, 2000);
+};
+
 const setupOfferManagement = () => {
     const updateAddButtonVisibility = () => {
         const offer2 = document.getElementById('offer-block-2') as HTMLElement;
@@ -553,6 +587,7 @@ const setupFooterCtaManagement = () => {
 
 emailForm.addEventListener('submit', handleFormSubmit);
 copyBtn.addEventListener('click', handleCopyClick);
+downloadBtn.addEventListener('click', handleDownloadClick);
 document.addEventListener('DOMContentLoaded', () => {
     setupOfferManagement();
     setupMergeFieldInserter();

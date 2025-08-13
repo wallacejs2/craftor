@@ -55,7 +55,6 @@ const getContrastColor = (hexColor: string): string => {
 
 const generateEmailHtml = (data: any) => {
   const {
-    subject,
     bodyContent,
     heroImage,
     ctaText,
@@ -64,16 +63,26 @@ const generateEmailHtml = (data: any) => {
     offers,
     disclaimer,
     bodyBackgroundColor,
+    fontFamily,
+    footerCtas,
+    footerBackgroundColor,
+    footerCtaTextColor,
   } = data;
   const mainButtonColor = ctaColor || '#4f46e5';
   const mainBodyBg = bodyBackgroundColor || '#ffffff';
   const mainBodyTextColor = getContrastColor(mainBodyBg);
+  const emailFont = fontFamily || "'Arial', sans-serif";
+  const msoFont = emailFont.split(',')[0].replace(/'/g, '').trim();
+  const footerBg = footerBackgroundColor || '#ffffff';
+  const footerButtonBg = footerBg;
+  const footerButtonText = footerCtaTextColor || '#4f46e5';
+
 
   const renderOffer = (offer: any) => {
     if (!offer.title && !offer.vehicle && !offer.details) return '';
     const imageCell = offer.imageDataUrl
-      ? `<td width="120" valign="top" style="padding-right: 20px;">
-           <img src="${offer.imageDataUrl}" width="120" alt="${offer.title}" style="display: block; width: 100%; max-width: 120px; border: 0; border-radius: 8px;">
+      ? `<td width="240" valign="top" style="padding-right: 20px;">
+           <img src="${offer.imageDataUrl}" width="240" alt="${offer.title}" style="display: block; width: 100%; max-width: 240px; border: 0; border-radius: 8px;">
          </td>`
       : '';
     const offerButtonColor = offer.ctaColor || '#4f46e5';
@@ -84,7 +93,7 @@ const generateEmailHtml = (data: any) => {
           <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
               ${imageCell}
-              <td valign="top" style="font-family: Arial, sans-serif; color: #333333;">
+              <td valign="top" style="font-family: ${emailFont}; color: #333333;">
                 <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
                 <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
                 <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
@@ -92,12 +101,12 @@ const generateEmailHtml = (data: any) => {
                   <div><!--[if mso]>
                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
                       <w:anchorlock/>
-                      <center style="color:#ffffff;font-family:sans-serif;font-size:14px;font-weight:bold;">${offer.ctaText}</center>
+                      <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${offer.ctaText}</center>
                     </v:roundrect>
                   <![endif]--><a href="${offer.ctaLink}"
-                  style="background-color:${offerButtonColor};border-radius:5px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">${offer.ctaText}</a></div>` : ''
+                  style="background-color:${offerButtonColor};border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">${offer.ctaText}</a></div>` : ''
                 }
-                ${ offer.disclaimer ? `<p style="margin: 15px 0 0 0; font-size: 11px; color: #718096; line-height: 1.5;">${offer.disclaimer.replace(/\n/g, '<br />')}</p>` : '' }
+                ${ offer.disclaimer ? `<p style="margin: 15px 0 0 0; font-size: 8px; color: #718096; line-height: 1.5;">${offer.disclaimer.replace(/\n/g, '<br />')}</p>` : '' }
               </td>
             </tr>
           </table>
@@ -108,6 +117,35 @@ const generateEmailHtml = (data: any) => {
 
   const offersHtml = offers.map(renderOffer).join('');
 
+  const footerCtasHtml = footerCtas && footerCtas.length > 0 ? `
+    <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
+    <tr>
+      <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: ${footerBg};">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tbody>
+            ${footerCtas.map((cta, index) => {
+              return `
+              <tr>
+                <td align="center" style="padding-bottom: ${index < footerCtas.length - 1 ? '15px' : '0'};">
+                  <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${cta.link}" style="height:40px;v-text-anchor:middle;width:250px;" arcsize="13%" strokecolor="${footerButtonBg}" fillcolor="${footerButtonBg}">
+                      <w:anchorlock/>
+                      <center style="color:${footerButtonText};font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${cta.text}</center>
+                    </v:roundrect>
+                  <![endif]-->
+                  <a href="${cta.link}" target="_blank"
+                  style="background-color:${footerButtonBg};border:none;border-radius:5px;color:${footerButtonText};display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:250px;-webkit-text-size-adjust:none;mso-hide:all;">${cta.text}</a>
+                </td>
+              </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  ` : '';
+
+
   return `
   <!DOCTYPE html>
   <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -116,11 +154,11 @@ const generateEmailHtml = (data: any) => {
       <meta name="viewport" content="width=device-width">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="x-apple-disable-message-reformatting">
-      <title>${subject}</title>
+      <title>Promotional Email</title>
       <!--[if mso]>
           <style>
               * {
-                  font-family: sans-serif !important;
+                  font-family: ${msoFont}, sans-serif !important;
               }
           </style>
       <![endif]-->
@@ -154,7 +192,7 @@ const generateEmailHtml = (data: any) => {
               <![endif]-->
               <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
                   <tr>
-                      <td style="padding: 20px; font-family: Arial, sans-serif; font-size: 15px; line-height: 1.5; color: #333333;">
+                      <td style="padding: 20px; font-family: ${emailFont}; font-size: 15px; line-height: 1.5; color: #333333;">
                         ${ heroImage ? `
                           <tr>
                             <td>
@@ -179,10 +217,10 @@ const generateEmailHtml = (data: any) => {
                                             <div><!--[if mso]>
                                               <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${ctaLink}" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="10%" strokecolor="${mainButtonColor}" fillcolor="${mainButtonColor}">
                                                 <w:anchorlock/>
-                                                <center style="color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">${ctaText}</center>
+                                                <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:16px;font-weight:bold;">${ctaText}</center>
                                               </v:roundrect>
                                             <![endif]--><a href="${ctaLink}"
-                                            style="background-color:${mainButtonColor};border:none;border-radius:5px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:50px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;mso-hide:all;">${ctaText}</a></div>
+                                            style="background-color:${mainButtonColor};border:none;border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:16px;font-weight:bold;line-height:50px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;mso-hide:all;">${ctaText}</a></div>
                                           </td>
                                       </tr>
                                   </table>
@@ -191,9 +229,10 @@ const generateEmailHtml = (data: any) => {
                           <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
                           `: ''}
                           ${offersHtml ? `<tr><td><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">${offersHtml}</table></td></tr>` : '' }
+                          ${footerCtasHtml}
                           ${ disclaimer ? `
                           <tr>
-                              <td style="text-align: center; padding: 20px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.5; color: #718096;">
+                              <td style="text-align: center; padding: 20px; font-family: ${emailFont}; font-size: 8px; line-height: 1.5; color: #718096;">
                                   ${disclaimer.replace(/\n/g, '<br />')}
                               </td>
                           </tr>
@@ -221,7 +260,7 @@ const handleFormSubmit = async (e: Event) => {
 
   try {
     const formData = new FormData(emailForm);
-    const subject = formData.get('subject') as string;
+    const fontFamily = formData.get('font-family') as string;
     const bodyContent = formData.get('email-body') as string;
     const bodyBackgroundColor = formData.get('body_bg_color') as string;
     const ctaText = formData.get('cta') as string;
@@ -236,9 +275,9 @@ const handleFormSubmit = async (e: Event) => {
     }
 
     const offersData = [];
-    for (let i = 1; i <= 3; i++) {
+    for (let i = 1; i <= 5; i++) {
       const offerBlock = document.getElementById(`offer-block-${i}`);
-      if (!offerBlock || offerBlock.style.display === 'none') {
+      if (!offerBlock || (i > 1 && offerBlock.style.display === 'none')) {
         continue;
       }
 
@@ -265,8 +304,23 @@ const handleFormSubmit = async (e: Event) => {
       }
     }
 
+    const footerCtasData = [];
+    for (let i = 1; i <= 3; i++) {
+      const ctaBlock = document.getElementById(`footer-cta-block-${i}`);
+       if (!ctaBlock || (i > 1 && ctaBlock.style.display === 'none')) {
+        continue;
+      }
+      const text = formData.get(`footer_cta_text_${i}`) as string;
+      const link = formData.get(`footer_cta_link_${i}`) as string;
+      if (text && link) {
+          footerCtasData.push({ text, link });
+      }
+    }
+
+    const footerBackgroundColor = formData.get('footer_bg_color') as string;
+    const footerCtaTextColor = formData.get('footer_cta_text_color') as string;
+
     const emailData = {
-      subject,
       bodyContent,
       bodyBackgroundColor,
       heroImage: heroImageDataUrl,
@@ -275,6 +329,10 @@ const handleFormSubmit = async (e: Event) => {
       ctaColor,
       offers: offersData,
       disclaimer: mainDisclaimer,
+      fontFamily,
+      footerCtas: footerCtasData,
+      footerBackgroundColor,
+      footerCtaTextColor,
     };
 
     const emailHtml = generateEmailHtml(emailData);
@@ -310,27 +368,35 @@ const handleCopyClick = async () => {
 };
 
 const setupOfferManagement = () => {
-    addOfferBtn.addEventListener('click', () => {
-        const offer2 = document.getElementById('offer-block-2') as HTMLElement;
-        const offer3 = document.getElementById('offer-block-3') as HTMLElement;
-
-        if (offer2.style.display === 'none') {
-            offer2.style.display = 'block';
-        } else if (offer3.style.display === 'none') {
-            offer3.style.display = 'block';
-        }
-        updateAddButtonVisibility();
-    });
-
     const updateAddButtonVisibility = () => {
         const offer2 = document.getElementById('offer-block-2') as HTMLElement;
         const offer3 = document.getElementById('offer-block-3') as HTMLElement;
-        if (offer2.style.display !== 'none' && offer3.style.display !== 'none') {
+        const offer4 = document.getElementById('offer-block-4') as HTMLElement;
+        const offer5 = document.getElementById('offer-block-5') as HTMLElement;
+        if (offer2.style.display !== 'none' && offer3.style.display !== 'none' && offer4.style.display !== 'none' && offer5.style.display !== 'none') {
             addOfferBtn.style.display = 'none';
         } else {
             addOfferBtn.style.display = 'block';
         }
     };
+
+    addOfferBtn.addEventListener('click', () => {
+        const offer2 = document.getElementById('offer-block-2') as HTMLElement;
+        const offer3 = document.getElementById('offer-block-3') as HTMLElement;
+        const offer4 = document.getElementById('offer-block-4') as HTMLElement;
+        const offer5 = document.getElementById('offer-block-5') as HTMLElement;
+
+        if (offer2.style.display === 'none') {
+            offer2.style.display = 'block';
+        } else if (offer3.style.display === 'none') {
+            offer3.style.display = 'block';
+        } else if (offer4.style.display === 'none') {
+            offer4.style.display = 'block';
+        } else if (offer5.style.display === 'none') {
+            offer5.style.display = 'block';
+        }
+        updateAddButtonVisibility();
+    });
 
     document.querySelectorAll('.remove-offer-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -343,7 +409,7 @@ const setupOfferManagement = () => {
             });
             const previewImg = document.getElementById(`offer_image_preview_${offerNum}`) as HTMLImageElement;
             if (previewImg) {
-                previewImg.src = 'https://placehold.co/100x100/f1f3f5/6c757d?text=Image';
+                previewImg.src = 'https://placehold.co/200x200/f1f3f5/6c757d?text=Image';
             }
             updateAddButtonVisibility();
         });
@@ -403,10 +469,93 @@ const setupMergeFieldInserter = () => {
     });
 };
 
+const setupMergeFieldCategories = () => {
+    document.querySelectorAll('.category-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+            const currentlyActive = button.classList.contains('active');
+            
+            // Deactivate all toggles first
+            document.querySelectorAll('.category-toggle').forEach(b => {
+                b.classList.remove('active');
+                const content = b.nextElementSibling as HTMLElement;
+                if (content) {
+                    content.style.maxHeight = '';
+                }
+            });
+
+            // If the clicked button was not already active, activate it.
+            if (!currentlyActive) {
+                button.classList.add('active');
+                const content = button.nextElementSibling as HTMLElement;
+                if (content) {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            }
+        });
+    });
+};
+
+const setupFooterCtaManagement = () => {
+    const addBtn = document.getElementById('add-footer-cta-btn') as HTMLButtonElement;
+    if (!addBtn) return;
+
+    const MAX_CTAS = 3;
+
+    const getVisibleCount = () => {
+        let count = 0;
+        for (let i = 1; i <= MAX_CTAS; i++) {
+            const block = document.getElementById(`footer-cta-block-${i}`);
+            if (block && (i === 1 || block.style.display !== 'none')) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    const updateAddButtonVisibility = () => {
+        const visibleCount = getVisibleCount();
+        if (visibleCount >= MAX_CTAS) {
+            addBtn.style.display = 'none';
+        } else {
+            addBtn.style.display = 'block';
+        }
+    };
+
+    addBtn.addEventListener('click', () => {
+        for (let i = 2; i <= MAX_CTAS; i++) {
+            const block = document.getElementById(`footer-cta-block-${i}`);
+            if (block && block.style.display === 'none') {
+                block.style.display = 'block';
+                break;
+            }
+        }
+        updateAddButtonVisibility();
+    });
+
+    document.querySelectorAll('.remove-footer-cta-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const target = e.currentTarget as HTMLButtonElement;
+            const ctaNum = target.dataset.ctaNum;
+            const ctaBlock = document.getElementById(`footer-cta-block-${ctaNum}`) as HTMLElement;
+            if (ctaBlock) {
+                ctaBlock.style.display = 'none';
+                ctaBlock.querySelectorAll('input').forEach((input: HTMLInputElement) => {
+                    input.value = '';
+                });
+            }
+            updateAddButtonVisibility();
+        });
+    });
+
+    updateAddButtonVisibility();
+};
+
 
 emailForm.addEventListener('submit', handleFormSubmit);
 copyBtn.addEventListener('click', handleCopyClick);
 document.addEventListener('DOMContentLoaded', () => {
     setupOfferManagement();
     setupMergeFieldInserter();
+    setupMergeFieldCategories();
+    setupFooterCtaManagement();
 });

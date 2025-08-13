@@ -1,7 +1,7 @@
 :root {
   --background-color: #fafbfc;
   --text-color: #2d3748;
-  --primary-color: #0B38DC;
+  --primary-color: #4f46e5;
   --primary-hover-color: #4338ca;
   --card-background: #ffffff;
   --border-color: #e2e8f0;
@@ -254,18 +254,37 @@ button:disabled {
   color: var(--text-color);
 }
 
-#copy-btn {
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#copy-btn,
+#download-btn {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  background-color: var(--primary-color);
-  color: white;
   border: none;
   width: auto;
+  transform: none;
+}
+
+#copy-btn {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 #copy-btn:hover {
   background-color: var(--primary-hover-color);
+}
+
+#download-btn {
+  background-color: #10b981;
+  color: white;
+}
+
+#download-btn:hover {
+  background-color: #059669;
 }
 
 .preview-container,
@@ -668,5 +687,16 @@ footer p {
   #code-block,
   #preview-pane {
     height: 400px;
+  }
+  
+  .button-group {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  #copy-btn,
+  #download-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
   }
 }

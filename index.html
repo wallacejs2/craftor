@@ -102,6 +102,7 @@
                 placeholder="Hi {{recipient.first_name}}, we have exciting news about your {{customer.last_transaction.vehicle.make}}..."
                 required
               ></textarea>
+              <small class="formatting-hint">You can use basic HTML tags like &lt;strong&gt;, &lt;em&gt;, &lt;u&gt; for additional formatting</small>
             </div>
             
             <div class="form-group-grid two-col">
@@ -283,7 +284,7 @@
 
           <!-- Offers Section -->
           <div class="offers-section">
-            <h2>Promotional Offers (optional, max 5)</h2>
+            <h2>Promotional Offers (optional)</h2>
             <div id="offers-container">
               <!-- Offer 1 -->
               <div class="offer-block" id="offer-block-1">
@@ -330,40 +331,13 @@
                     </div>
                     <div class="form-group">
                       <label for="offer_details_1">Offer Details</label>
-                      <div class="text-formatting-controls">
-                        <div class="formatting-row">
-                          <div class="font-size-control">
-                            <label for="offer_1_font_size">Text Size</label>
-                            <select id="offer_1_font_size" name="offer_1_font_size">
-                              <option value="12">12px</option>
-                              <option value="14" selected>14px</option>
-                              <option value="16">16px</option>
-                              <option value="18">18px</option>
-                              <option value="20">20px</option>
-                            </select>
-                          </div>
-                          <div class="formatting-options">
-                            <label>
-                              <input type="checkbox" id="offer_1_bold" name="offer_1_bold">
-                              <span class="format-btn bold-btn">B</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_1_italic" name="offer_1_italic">
-                              <span class="format-btn italic-btn">I</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_1_underline" name="offer_1_underline">
-                              <span class="format-btn underline-btn">U</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
                       <textarea
                         id="offer_details_1"
                         name="offer_details_1"
                         rows="3"
                         placeholder="36-month lease, $3,000 down payment required."
                       ></textarea>
+                      <small class="formatting-hint">Use HTML tags like &lt;strong&gt;, &lt;em&gt;, &lt;u&gt; for formatting</small>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
@@ -454,40 +428,13 @@
                     </div>
                     <div class="form-group">
                       <label for="offer_details_2">Offer Details</label>
-                      <div class="text-formatting-controls">
-                        <div class="formatting-row">
-                          <div class="font-size-control">
-                            <label for="offer_2_font_size">Text Size</label>
-                            <select id="offer_2_font_size" name="offer_2_font_size">
-                              <option value="12">12px</option>
-                              <option value="14" selected>14px</option>
-                              <option value="16">16px</option>
-                              <option value="18">18px</option>
-                              <option value="20">20px</option>
-                            </select>
-                          </div>
-                          <div class="formatting-options">
-                            <label>
-                              <input type="checkbox" id="offer_2_bold" name="offer_2_bold">
-                              <span class="format-btn bold-btn">B</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_2_italic" name="offer_2_italic">
-                              <span class="format-btn italic-btn">I</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_2_underline" name="offer_2_underline">
-                              <span class="format-btn underline-btn">U</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
                       <textarea
                         id="offer_details_2"
                         name="offer_details_2"
                         rows="3"
                         placeholder="36-month lease, $3,000 down payment required."
                       ></textarea>
+                      <small class="formatting-hint">Use HTML tags like &lt;strong&gt;, &lt;em&gt;, &lt;u&gt; for formatting</small>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
@@ -578,40 +525,13 @@
                     </div>
                     <div class="form-group">
                       <label for="offer_details_3">Offer Details</label>
-                      <div class="text-formatting-controls">
-                        <div class="formatting-row">
-                          <div class="font-size-control">
-                            <label for="offer_3_font_size">Text Size</label>
-                            <select id="offer_3_font_size" name="offer_3_font_size">
-                              <option value="12">12px</option>
-                              <option value="14" selected>14px</option>
-                              <option value="16">16px</option>
-                              <option value="18">18px</option>
-                              <option value="20">20px</option>
-                            </select>
-                          </div>
-                          <div class="formatting-options">
-                            <label>
-                              <input type="checkbox" id="offer_3_bold" name="offer_3_bold">
-                              <span class="format-btn bold-btn">B</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_3_italic" name="offer_3_italic">
-                              <span class="format-btn italic-btn">I</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_3_underline" name="offer_3_underline">
-                              <span class="format-btn underline-btn">U</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
                       <textarea
                         id="offer_details_3"
                         name="offer_details_3"
                         rows="3"
                         placeholder="36-month lease, $3,000 down payment required."
                       ></textarea>
+                      <small class="formatting-hint">Use HTML tags like &lt;strong&gt;, &lt;em&gt;, &lt;u&gt; for formatting</small>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
@@ -826,34 +746,6 @@
                     </div>
                     <div class="form-group">
                       <label for="offer_details_5">Offer Details</label>
-                      <div class="text-formatting-controls">
-                        <div class="formatting-row">
-                          <div class="font-size-control">
-                            <label for="offer_5_font_size">Text Size</label>
-                            <select id="offer_5_font_size" name="offer_5_font_size">
-                              <option value="12">12px</option>
-                              <option value="14" selected>14px</option>
-                              <option value="16">16px</option>
-                              <option value="18">18px</option>
-                              <option value="20">20px</option>
-                            </select>
-                          </div>
-                          <div class="formatting-options">
-                            <label>
-                              <input type="checkbox" id="offer_5_bold" name="offer_5_bold">
-                              <span class="format-btn bold-btn">B</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_5_italic" name="offer_5_italic">
-                              <span class="format-btn italic-btn">I</span>
-                            </label>
-                            <label>
-                              <input type="checkbox" id="offer_5_underline" name="offer_5_underline">
-                              <span class="format-btn underline-btn">U</span>
-                            </label>
-                          </div>
-                        </div>
-                      </div>
                       <textarea
                         id="offer_details_5"
                         name="offer_details_5"
@@ -905,7 +797,7 @@
 
           <!-- Footer CTAs Section -->
           <div class="footer-ctas-section">
-            <h2>Footer Links (optional, max 3)</h2>
+            <h2>Footer Links (optional)</h2>
             <p>Add up to 3 secondary links that appear at the bottom of your email.</p>
             <div class="form-group-grid two-col">
               <div class="form-group">

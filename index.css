@@ -162,6 +162,101 @@ textarea::placeholder {
   color: #94a3b8;
 }
 
+/* Text Formatting Controls */
+.text-formatting-controls {
+  margin-bottom: 0.5rem;
+}
+
+.formatting-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.font-size-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.font-size-control label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.font-size-control select {
+  width: 80px;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.formatting-options {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.formatting-options label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.formatting-options input[type="checkbox"] {
+  display: none;
+}
+
+.format-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.format-btn:hover {
+  background-color: #f1f5f9;
+  border-color: var(--primary-color);
+}
+
+.formatting-options input[type="checkbox"]:checked + .format-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.bold-btn {
+  font-weight: bold;
+}
+
+.italic-btn {
+  font-style: italic;
+}
+
+.underline-btn {
+  text-decoration: underline;
+}
+
+.formatting-hint {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 button {
   padding: 0.875rem 1.5rem;
   background-color: var(--primary-color);
@@ -698,5 +793,19 @@ footer p {
   #download-btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+  }
+  
+  .formatting-row {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+  
+  .font-size-control {
+    justify-content: space-between;
+  }
+  
+  .formatting-options {
+    justify-content: center;
   }
 }

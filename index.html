@@ -37,9 +37,13 @@
               <label for="font-family">Email Font</label>
               <select id="font-family" name="font-family">
                 <option value="'Arial', sans-serif">Arial</option>
+                <option value="'Courier New', Courier, monospace">Courier New</option>
                 <option value="'Georgia', serif">Georgia</option>
                 <option value="'Helvetica', sans-serif">Helvetica</option>
+                <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans</option>
+                <option value="'Tahoma', sans-serif">Tahoma</option>
                 <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                <option value="'Trebuchet MS', 'Helvetica', sans-serif">Trebuchet MS</option>
                 <option value="'Verdana', sans-serif">Verdana</option>
               </select>
             </div>
@@ -139,11 +143,17 @@
                     <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
                       <span>Dealership Website</span><code>{{dealership.website_homepage_url}}</code>
                     </div>
+                    <div class="merge-field-item" data-value="{{dealership.sales.representative.name}}">
+                      <span>Sales Rep Name</span><code>{{dealership.sales.representative.name}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.sales.representative.title}}">
+                      <span>Sales Rep Title</span><code>{{dealership.sales.representative.title}}</code>
+                    </div>
                   </div>
                 </div>
                 <div class="merge-field-group">
                   <button type="button" class="category-toggle">
-                    Customer Vehicle
+                    Customer Vehicle & Transaction
                     <span class="toggle-icon"></span>
                   </button>
                   <div class="category-content">
@@ -156,6 +166,12 @@
                     <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
                       <span>Vehicle Model</span><code>{{customer.last_transaction.vehicle.model}}</code>
                     </div>
+                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.vin}}">
+                      <span>Vehicle VIN</span><code>{{customer.last_transaction.vehicle.vin}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.equity_payout_formatted}}">
+                      <span>Equity Payout</span><code>{{customer.last_transaction.vehicle.equity_payout_formatted}}</code>
+                    </div>
                   </div>
                 </div>
                 <div class="merge-field-group">
@@ -165,13 +181,69 @@
                   </button>
                   <div class="category-content">
                     <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
-                      <span>Tracked Homepage</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
+                      <span>Tracked Homepage (No LP)</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
                     </div>
                     <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
-                      <span>Tracked Service</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
+                      <span>Tracked Service (No LP)</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
+                      <span>Homepage URL</span><code>{{dealership.website_homepage_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_url}}">
+                      <span>Tracked Accessories</span><code>{{dealership.tracked_website_accessories_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_no_lp_url}}">
+                      <span>Tracked Accessories (No LP)</span><code>{{dealership.tracked_website_accessories_no_lp_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_url}}">
+                      <span>Tracked Body Shop</span><code>{{dealership.tracked_website_body_shop_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_no_lp_url}}">
+                      <span>Tracked Body Shop (No LP)</span><code>{{dealership.tracked_website_body_shop_no_lp_url}}</code>
                     </div>
                     <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_url}}">
-                      <span>Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
+                      <span>Tracked Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_no_lp_url}}">
+                      <span>Tracked Service Scheduler (No LP)</span><code>{{dealership.tracked_website_service_scheduler_no_lp_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_url}}">
+                      <span>Tracked Service Specials</span><code>{{dealership.tracked_website_service_specials_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_no_lp_url}}">
+                      <span>Tracked Service Specials (No LP)</span><code>{{dealership.tracked_website_service_specials_no_lp_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.website_service_customer_reviews_url}}">
+                      <span>Service Reviews URL</span><code>{{dealership.website_service_customer_reviews_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_url}}">
+                      <span>Tracked Service Reviews</span><code>{{dealership.tracked_website_service_customer_reviews_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_no_lp_url}}">
+                      <span>Tracked Service Reviews (No LP)</span><code>{{dealership.tracked_website_service_customer_reviews_no_lp_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_url}}">
+                      <span>Tracked Tires</span><code>{{dealership.tracked_website_tires_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_no_lp_url}}">
+                      <span>Tracked Tires (No LP)</span><code>{{dealership.tracked_website_tires_no_lp_url}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}">
+                      <span>Tracked Vehicle Acquisition (No LP)</span><code>{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}</code>
+                    </div>
+                  </div>
+                </div>
+                <div class="merge-field-group">
+                  <button type="button" class="category-toggle">
+                    Recall Data
+                    <span class="toggle-icon"></span>
+                  </button>
+                  <div class="category-content">
+                    <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_campaign_number}}">
+                      <span>Recall Campaign Number</span><code>{{customer.last_sold_vehicle.recall_campaign_number}}</code>
+                    </div>
+                    <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_description}}">
+                      <span>Recall Description</span><code>{{customer.last_sold_vehicle.recall_description}}</code>
                     </div>
                   </div>
                 </div>
@@ -684,11 +756,11 @@
                 <div class="form-group-grid two-col">
                   <div>
                     <label for="footer_cta_text_1">Link Text</label>
-                    <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" placeholder="Visit Our Website">
+                    <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" value="Visit Our Website">
                   </div>
                   <div>
                     <label for="footer_cta_link_1">Link URL</label>
-                    <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" placeholder="{{dealership.tracked_website_homepage_no_lp_url}}">
+                    <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" value="{{dealership.tracked_website_homepage_no_lp_url}}">
                   </div>
                 </div>
               </div>
@@ -762,7 +834,7 @@
         <p>Your generated email will appear here.</p>
       </section>
       <footer>
-        <p>Created by Jayden Wallace © 2025</p>
+        <p>Built with ❤️ by Jayden Wallace © 2025</p>
       </footer>
     </main>
   </body>

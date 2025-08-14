@@ -100,15 +100,6 @@ const generateEmailHtml = (data: any) => {
       : '';
     const offerButtonColor = offer.ctaColor || '#4f46e5';
 
-    // Generate offer text styles
-    const offerTextStyles = [
-      `font-size: ${offer.fontSize || 14}px`,
-      offer.bold ? 'font-weight: bold' : '',
-      offer.italic ? 'font-style: italic' : '',
-      offer.underline ? 'text-decoration: underline' : '',
-      'line-height: 1.6'
-    ].filter(Boolean).join('; ');
-
     return `
       <tr>
         <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
@@ -118,7 +109,7 @@ const generateEmailHtml = (data: any) => {
               <td valign="top" style="font-family: ${emailFont}; color: #333333;">
                 <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
                 <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
-                <p style="margin: 0 0 15px 0; ${offerTextStyles};">${offer.details.replace(/\n/g, '<br />') || ''}</p>
+                <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
                 ${ offer.ctaText && offer.ctaLink ? `
                   <div><!--[if mso]>
                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
@@ -326,10 +317,6 @@ const handleFormSubmit = async (e: Event) => {
           ctaColor: formData.get(`offer_cta_color_${i}`) as string,
           disclaimer: formData.get(`offer_disclaimer_${i}`) as string,
           imageDataUrl: offerImageDataUrl,
-          fontSize: formData.get(`offer_${i}_font_size`) as string,
-          bold: formData.get(`offer_${i}_bold`) === 'on',
-          italic: formData.get(`offer_${i}_italic`) === 'on',
-          underline: formData.get(`offer_${i}_underline`) === 'on',
         });
       }
     }

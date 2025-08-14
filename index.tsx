@@ -57,6 +57,10 @@ const getContrastColor = (hexColor: string): string => {
 const generateEmailHtml = (data: any) => {
   const {
     bodyContent,
+    bodyFontSize,
+    bodyBold,
+    bodyItalic,
+    bodyUnderline,
     heroImage,
     ctaText,
     ctaLink,
@@ -78,6 +82,14 @@ const generateEmailHtml = (data: any) => {
   const footerButtonBg = footerBg;
   const footerButtonText = footerCtaTextColor || '#4f46e5';
 
+  // Generate body text styles
+  const bodyTextStyles = [
+    `font-size: ${bodyFontSize || 16}px`,
+    bodyBold ? 'font-weight: bold' : '',
+    bodyItalic ? 'font-style: italic' : '',
+    bodyUnderline ? 'text-decoration: underline' : '',
+    `color: ${mainBodyTextColor}`
+  ].filter(Boolean).join('; ');
 
   const renderOffer = (offer: any) => {
     if (!offer.title && !offer.vehicle && !offer.details) return '';
@@ -88,6 +100,15 @@ const generateEmailHtml = (data: any) => {
       : '';
     const offerButtonColor = offer.ctaColor || '#4f46e5';
 
+    // Generate offer text styles
+    const offerTextStyles = [
+      `font-size: ${offer.fontSize || 14}px`,
+      offer.bold ? 'font-weight: bold' : '',
+      offer.italic ? 'font-style: italic' : '',
+      offer.underline ? 'text-decoration: underline' : '',
+      'line-height: 1.6'
+    ].filter(Boolean).join('; ');
+
     return `
       <tr>
         <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
@@ -97,7 +118,7 @@ const generateEmailHtml = (data: any) => {
               <td valign="top" style="font-family: ${emailFont}; color: #333333;">
                 <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
                 <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
-                <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
+                <p style="margin: 0 0 15px 0; ${offerTextStyles};">${offer.details.replace(/\n/g, '<br />') || ''}</p>
                 ${ offer.ctaText && offer.ctaLink ? `
                   <div><!--[if mso]>
                     <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
@@ -205,7 +226,7 @@ const generateEmailHtml = (data: any) => {
                         }
                           <tr>
                               <td style="padding: 10px 20px; background-color: ${mainBodyBg}; border-radius: 8px;">
-                                  <p style="margin: 0; color: ${mainBodyTextColor};">${bodyContent.replace(/\n/g, '<br />')}</p>
+                                  <p style="margin: 0; ${bodyTextStyles};">${bodyContent.replace(/\n/g, '<br />')}</p>
                               </td>
                           </tr>
                           <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
@@ -263,6 +284,10 @@ const handleFormSubmit = async (e: Event) => {
     const formData = new FormData(emailForm);
     const fontFamily = formData.get('font-family') as string;
     const bodyContent = formData.get('email-body') as string;
+    const bodyFontSize = formData.get('body_font_size') as string;
+    const bodyBold = formData.get('body_bold') === 'on';
+    const bodyItalic = formData.get('body_italic') === 'on';
+    const bodyUnderline = formData.get('body_underline') === 'on';
     const bodyBackgroundColor = formData.get('body_bg_color') as string;
     const ctaText = formData.get('cta') as string;
     const ctaLink = formData.get('cta_link') as string;
@@ -301,6 +326,10 @@ const handleFormSubmit = async (e: Event) => {
           ctaColor: formData.get(`offer_cta_color_${i}`) as string,
           disclaimer: formData.get(`offer_disclaimer_${i}`) as string,
           imageDataUrl: offerImageDataUrl,
+          fontSize: formData.get(`offer_${i}_font_size`) as string,
+          bold: formData.get(`offer_${i}_bold`) === 'on',
+          italic: formData.get(`offer_${i}_italic`) === 'on',
+          underline: formData.get(`offer_${i}_underline`) === 'on',
         });
       }
     }
@@ -323,6 +352,10 @@ const handleFormSubmit = async (e: Event) => {
 
     const emailData = {
       bodyContent,
+      bodyFontSize,
+      bodyBold,
+      bodyItalic,
+      bodyUnderline,
       bodyBackgroundColor,
       heroImage: heroImageDataUrl,
       ctaText,

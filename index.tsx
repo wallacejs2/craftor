@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2025 Google LLC
+ * Copyright Wallace, Jayden
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -17,7 +17,6 @@ const outputPlaceholder = document.getElementById(
 const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
 const codeBlock = document.getElementById('code-block') as HTMLElement;
 const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
-const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
 const addOfferBtn = document.getElementById('add-offer-btn') as HTMLButtonElement;
 const emailBodyTextarea = document.getElementById('email-body') as HTMLTextAreaElement;
 
@@ -53,14 +52,9 @@ const getContrastColor = (hexColor: string): string => {
   return (brightness > 125) ? '#333333' : '#ffffff';
 };
 
-
 const generateEmailHtml = (data: any) => {
   const {
     bodyContent,
-    bodyFontSize,
-    bodyBold,
-    bodyItalic,
-    bodyUnderline,
     heroImage,
     ctaText,
     ctaLink,
@@ -82,50 +76,98 @@ const generateEmailHtml = (data: any) => {
   const footerButtonBg = footerBg;
   const footerButtonText = footerCtaTextColor || '#4f46e5';
 
-  // Generate body text styles
-  const bodyTextStyles = [
-    `font-size: ${bodyFontSize || 16}px`,
-    bodyBold ? 'font-weight: bold' : '',
-    bodyItalic ? 'font-style: italic' : '',
-    bodyUnderline ? 'text-decoration: underline' : '',
-    `color: ${mainBodyTextColor}`
-  ].filter(Boolean).join('; ');
-
   const renderOffer = (offer: any) => {
     if (!offer.title && !offer.vehicle && !offer.details) return '';
-    const imageCell = offer.imageDataUrl
-      ? `<td width="240" valign="top" style="padding-right: 20px;">
-           <img src="${offer.imageDataUrl}" width="240" alt="${offer.title}" style="display: block; width: 100%; max-width: 240px; border: 0; border-radius: 8px;">
-         </td>`
-      : '';
+    
     const offerButtonColor = offer.ctaColor || '#4f46e5';
+    const imagePosition = offer.imagePosition || 'left';
+    
+    // Generate content sections
+    const textContent = `
+      <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
+      <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
+      <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
+      ${ offer.ctaText && offer.ctaLink ? `
+        <div><!--[if mso]>
+          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
+            <w:anchorlock/>
+            <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${offer.ctaText}</center>
+          </v:roundrect>
+        <![endif]--><a href="${offer.ctaLink}"
+        style="background-color:${offerButtonColor};border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">${offer.ctaText}</a></div>` : ''
+      }
+      ${ offer.disclaimer ? `<p style="margin: 15px 0 0 0; font-size: 8px; color: #718096; line-height: 1.5;">${offer.disclaimer.replace(/\n/g, '<br />')}</p>` : '' }
+    `;
 
-    return `
-      <tr>
-        <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
-          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-              ${imageCell}
-              <td valign="top" style="font-family: ${emailFont}; color: #333333;">
-                <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
-                <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
-                <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
-                ${ offer.ctaText && offer.ctaLink ? `
-                  <div><!--[if mso]>
-                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
-                      <w:anchorlock/>
-                      <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${offer.ctaText}</center>
-                    </v:roundrect>
-                  <![endif]--><a href="${offer.ctaLink}"
-                  style="background-color:${offerButtonColor};border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">${offer.ctaText}</a></div>` : ''
-                }
-                ${ offer.disclaimer ? `<p style="margin: 15px 0 0 0; font-size: 8px; color: #718096; line-height: 1.5;">${offer.disclaimer.replace(/\n/g, '<br />')}</p>` : '' }
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+    if (!offer.imageDataUrl) {
+      // No image, just show text content
+      return `
+        <tr>
+          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+            <div style="font-family: ${emailFont}; color: #333333;">
+              ${textContent}
+            </div>
+          </td>
+        </tr>
+        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+    }
+
+    // Handle different image positions
+    if (imagePosition === 'top') {
+      return `
+        <tr>
+          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td align="center" style="padding-bottom: 20px;">
+                  <img src="${offer.imageDataUrl}" width="100%" alt="${offer.title}" style="display: block; max-width: 560px; height: auto; border: 0; border-radius: 8px;">
+                </td>
+              </tr>
+              <tr>
+                <td style="font-family: ${emailFont}; color: #333333;">
+                  ${textContent}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+    } else if (imagePosition === 'right') {
+      return `
+        <tr>
+          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td valign="top" style="font-family: ${emailFont}; color: #333333; padding-right: 20px;">
+                  ${textContent}
+                </td>
+                <td width="240" valign="top">
+                  <img src="${offer.imageDataUrl}" width="240" alt="${offer.title}" style="display: block; width: 100%; max-width: 240px; border: 0; border-radius: 8px;">
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+    } else {
+      // Default: left position
+      return `
+        <tr>
+          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td width="240" valign="top" style="padding-right: 20px;">
+                  <img src="${offer.imageDataUrl}" width="240" alt="${offer.title}" style="display: block; width: 100%; max-width: 240px; border: 0; border-radius: 8px;">
+                </td>
+                <td valign="top" style="font-family: ${emailFont}; color: #333333;">
+                  ${textContent}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+    }
   };
 
   const offersHtml = offers.map(renderOffer).join('');
@@ -157,7 +199,6 @@ const generateEmailHtml = (data: any) => {
       </td>
     </tr>
   ` : '';
-
 
   return `
   <!DOCTYPE html>
@@ -217,7 +258,7 @@ const generateEmailHtml = (data: any) => {
                         }
                           <tr>
                               <td style="padding: 10px 20px; background-color: ${mainBodyBg}; border-radius: 8px;">
-                                  <p style="margin: 0; ${bodyTextStyles};">${bodyContent.replace(/\n/g, '<br />')}</p>
+                                  <p style="margin: 0; color: ${mainBodyTextColor};">${bodyContent.replace(/\n/g, '<br />')}</p>
                               </td>
                           </tr>
                           <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
@@ -274,11 +315,8 @@ const handleFormSubmit = async (e: Event) => {
   try {
     const formData = new FormData(emailForm);
     const fontFamily = formData.get('font-family') as string;
+    const emailStyle = formData.get('email-style') as string || 'modern';
     const bodyContent = formData.get('email-body') as string;
-    const bodyFontSize = formData.get('body_font_size') as string;
-    const bodyBold = formData.get('body_bold') === 'on';
-    const bodyItalic = formData.get('body_italic') === 'on';
-    const bodyUnderline = formData.get('body_underline') === 'on';
     const bodyBackgroundColor = formData.get('body_bg_color') as string;
     const ctaText = formData.get('cta') as string;
     const ctaLink = formData.get('cta_link') as string;
@@ -304,6 +342,7 @@ const handleFormSubmit = async (e: Event) => {
 
       if (vehicle || title || details) {
         const offerImageFile = formData.get(`offer_image_${i}`) as File;
+        const imagePosition = formData.get(`offer_image_position_${i}`) as string || 'left';
         let offerImageDataUrl = '';
         if (offerImageFile && offerImageFile.size > 0) {
           offerImageDataUrl = await readFileAsDataURL(offerImageFile);
@@ -312,6 +351,7 @@ const handleFormSubmit = async (e: Event) => {
           vehicle,
           title,
           details,
+          imagePosition,
           ctaText: formData.get(`offer_cta_text_${i}`) as string,
           ctaLink: formData.get(`offer_cta_link_${i}`) as string,
           ctaColor: formData.get(`offer_cta_color_${i}`) as string,
@@ -338,11 +378,8 @@ const handleFormSubmit = async (e: Event) => {
     const footerCtaTextColor = formData.get('footer_cta_text_color') as string;
 
     const emailData = {
+      emailStyle,
       bodyContent,
-      bodyFontSize,
-      bodyBold,
-      bodyItalic,
-      bodyUnderline,
       bodyBackgroundColor,
       heroImage: heroImageDataUrl,
       ctaText,
@@ -390,35 +427,20 @@ const handleCopyClick = async () => {
 
 const handleDownloadClick = () => {
   if (!codeBlock.textContent) return;
-  
-  // Create a formatted filename with current date and time
-  const now = new Date();
-  const timestamp = now.toISOString().slice(0, 19).replace(/[:.]/g, '-');
-  const filename = `email-template-${timestamp}.html`;
-  
-  // Create a blob with the HTML content
-  const blob = new Blob([codeBlock.textContent], { type: 'text/html' });
-  
-  // Create a temporary download link
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  
-  // Trigger the download
-  document.body.appendChild(link);
-  link.click();
-  
-  // Clean up
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-  
-  // Update button text temporarily
-  const originalText = downloadBtn.textContent;
-  downloadBtn.textContent = 'Downloaded!';
-  setTimeout(() => {
-    downloadBtn.textContent = originalText;
-  }, 2000);
+  try {
+    const blob = new Blob([codeBlock.textContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'email-template.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error('Failed to download HTML: ', err);
+    alert('Failed to download HTML. Please try again.');
+  }
 };
 
 const setupOfferManagement = () => {
@@ -458,8 +480,14 @@ const setupOfferManagement = () => {
             const offerNum = target.dataset.offerNum;
             const offerBlock = document.getElementById(`offer-block-${offerNum}`) as HTMLElement;
             offerBlock.style.display = 'none';
-            offerBlock.querySelectorAll('input, textarea').forEach((input: any) => {
-                 input.value = '';
+            offerBlock.querySelectorAll('input, textarea, select').forEach((input: any) => {
+                 if (input.type === 'file') {
+                   input.value = '';
+                 } else if (input.tagName === 'SELECT') {
+                   input.selectedIndex = 0;
+                 } else {
+                   input.value = '';
+                 }
             });
             const previewImg = document.getElementById(`offer_image_preview_${offerNum}`) as HTMLImageElement;
             if (previewImg) {
@@ -490,7 +518,7 @@ const setupOfferManagement = () => {
 
 const setupMergeFieldInserter = () => {
     let lastFocusedInput: HTMLInputElement | HTMLTextAreaElement | null = null;
-    const mergeFieldItems = document.querySelectorAll('.merge-field-item');
+    const mergeFieldItems = document.querySelectorAll('.sidebar-content .merge-field-item');
     const targetInputs = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[type="text"], textarea');
 
     targetInputs.forEach(input => {
@@ -518,18 +546,27 @@ const setupMergeFieldInserter = () => {
                 const newCursorPos = startPos + valueToInsert.length;
                 lastFocusedInput.focus();
                 lastFocusedInput.setSelectionRange(newCursorPos, newCursorPos);
+                
+                // Close sidebar after insertion
+                const sidebar = document.getElementById('merge-fields-sidebar');
+                const overlay = document.getElementById('sidebar-overlay');
+                if (sidebar && overlay) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('visible');
+                    document.body.style.overflow = '';
+                }
             }
         });
     });
 };
 
 const setupMergeFieldCategories = () => {
-    document.querySelectorAll('.category-toggle').forEach(button => {
+    document.querySelectorAll('.sidebar-content .category-toggle').forEach(button => {
         button.addEventListener('click', () => {
             const currentlyActive = button.classList.contains('active');
             
             // Deactivate all toggles first
-            document.querySelectorAll('.category-toggle').forEach(b => {
+            document.querySelectorAll('.sidebar-content .category-toggle').forEach(b => {
                 b.classList.remove('active');
                 const content = b.nextElementSibling as HTMLElement;
                 if (content) {
@@ -604,13 +641,74 @@ const setupFooterCtaManagement = () => {
     updateAddButtonVisibility();
 };
 
+const setupPreviewToggle = () => {
+    const desktopBtn = document.getElementById('desktop-view-btn') as HTMLButtonElement;
+    const mobileBtn = document.getElementById('mobile-view-btn') as HTMLButtonElement;
+    const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
+
+    if (!desktopBtn || !mobileBtn || !previewPane) return;
+
+    const switchView = (view: string) => {
+        // Update button states
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        if (view === 'mobile') {
+            mobileBtn.classList.add('active');
+            previewPane.className = 'mobile-preview';
+        } else {
+            desktopBtn.classList.add('active');
+            previewPane.className = 'desktop-preview';
+        }
+    };
+
+    desktopBtn.addEventListener('click', () => switchView('desktop'));
+    mobileBtn.addEventListener('click', () => switchView('mobile'));
+};
+
+const setupMergeFieldsSidebar = () => {
+    const toggleBtn = document.getElementById('merge-fields-toggle') as HTMLButtonElement;
+    const floatingBtn = document.getElementById('floating-merge-btn') as HTMLButtonElement;
+    const closeBtn = document.getElementById('close-sidebar') as HTMLButtonElement;
+    const sidebar = document.getElementById('merge-fields-sidebar') as HTMLElement;
+    const overlay = document.getElementById('sidebar-overlay') as HTMLElement;
+
+    if (!toggleBtn || !floatingBtn || !closeBtn || !sidebar || !overlay) return;
+
+    const openSidebar = () => {
+        sidebar.classList.add('open');
+        overlay.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeSidebar = () => {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('visible');
+        document.body.style.overflow = '';
+    };
+
+    toggleBtn.addEventListener('click', openSidebar);
+    floatingBtn.addEventListener('click', openSidebar);
+    closeBtn.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+            closeSidebar();
+        }
+    });
+};
 
 emailForm.addEventListener('submit', handleFormSubmit);
 copyBtn.addEventListener('click', handleCopyClick);
-downloadBtn.addEventListener('click', handleDownloadClick);
+document.getElementById('download-btn')!.addEventListener('click', handleDownloadClick);
 document.addEventListener('DOMContentLoaded', () => {
     setupOfferManagement();
     setupMergeFieldInserter();
     setupMergeFieldCategories();
     setupFooterCtaManagement();
+    setupPreviewToggle();
+    setupMergeFieldsSidebar();
 });

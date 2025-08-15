@@ -5,10 +5,6 @@
     <link rel="stylesheet" href="index.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <script type="importmap">
       {
         "imports": {
@@ -27,263 +23,89 @@
         </p>
       </header>
       <section class="controls">
+        <div class="form-header">
+          <h2>Customize Your Email</h2>
+          <button type="button" id="merge-fields-toggle" class="merge-fields-btn">
+            Insert Merge Fields
+          </button>
+        </div>
         <form id="email-form">
-          <h2>Email Template Customizer</h2>
+          <div class="form-group">
+            <label for="font-family">Email Font</label>
+            <select id="font-family" name="font-family">
+              <option value="'Arial', sans-serif" style="font-family: 'Arial', sans-serif;">Arial</option>
+              <option value="'Courier New', Courier, monospace" style="font-family: 'Courier New', Courier, monospace;">Courier New</option>
+              <option value="'Georgia', serif" style="font-family: 'Georgia', serif;">Georgia</option>
+              <option value="'Helvetica', sans-serif" style="font-family: 'Helvetica', sans-serif;">Helvetica</option>
+              <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif" style="font-family: 'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;">Lucida Sans</option>
+              <option value="'Tahoma', sans-serif" style="font-family: 'Tahoma', sans-serif;">Tahoma</option>
+              <option value="'Times New Roman', Times, serif" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
+              <option value="'Trebuchet MS', 'Helvetica', sans-serif" style="font-family: 'Trebuchet MS', 'Helvetica', sans-serif;">Trebuchet MS</option>
+              <option value="'Verdana', sans-serif" style="font-family: 'Verdana', sans-serif;">Verdana</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="email-style">Email Style Template</label>
+            <select id="email-style" name="email-style">
+              <option value="modern">Modern - Clean and contemporary</option>
+              <option value="classic">Classic - Professional and traditional</option>
+              <option value="bold">Bold - High contrast and vibrant</option>
+              <option value="minimal">Minimal - Simple and elegant</option>
+              <option value="automotive">Automotive - Industry-focused design</option>
+            </select>
+          </div>
           
-          <!-- Basic Settings Section -->
-          <div class="form-section">
-            <h3>Basic Settings</h3>
-            <div class="form-group">
-              <label for="font-family">Email Font</label>
-              <select id="font-family" name="font-family">
-                <option value="'Arial', sans-serif">Arial</option>
-                <option value="'Courier New', Courier, monospace">Courier New</option>
-                <option value="'Georgia', serif">Georgia</option>
-                <option value="'Helvetica', sans-serif">Helvetica</option>
-                <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans</option>
-                <option value="'Tahoma', sans-serif">Tahoma</option>
-                <option value="'Times New Roman', Times, serif">Times New Roman</option>
-                <option value="'Trebuchet MS', 'Helvetica', sans-serif">Trebuchet MS</option>
-                <option value="'Verdana', sans-serif">Verdana</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label for="photo">Add a Hero Image (optional)</label>
+            <input
+              type="file"
+              id="photo"
+              name="photo"
+              accept="image/png, image/jpeg"
+            />
           </div>
 
-          <!-- Content Section -->
-          <div class="form-section">
-            <h3>Email Content</h3>
-            
-            <div class="form-group">
-              <label for="photo">Hero Image (optional)</label>
-              <input
-                type="file"
-                id="photo"
-                name="photo"
-                accept="image/png, image/jpeg"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="email-body">Email Body Text</label>
-              <div class="text-formatting-controls">
-                <div class="formatting-row">
-                  <div class="font-size-control">
-                    <label for="body_font_size">Text Size</label>
-                    <select id="body_font_size" name="body_font_size">
-                      <option value="12">12px</option>
-                      <option value="14">14px</option>
-                      <option value="16" selected>16px</option>
-                      <option value="18">18px</option>
-                      <option value="20">20px</option>
-                      <option value="22">22px</option>
-                      <option value="24">24px</option>
-                    </select>
-                  </div>
-                  <div class="formatting-options">
-                    <label>
-                      <input type="checkbox" id="body_bold" name="body_bold">
-                      <span class="format-btn bold-btn">B</span>
-                    </label>
-                    <label>
-                      <input type="checkbox" id="body_italic" name="body_italic">
-                      <span class="format-btn italic-btn">I</span>
-                    </label>
-                    <label>
-                      <input type="checkbox" id="body_underline" name="body_underline">
-                      <span class="format-btn underline-btn">U</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <textarea
-                id="email-body"
-                name="email-body"
-                rows="5"
-                placeholder="Hi {{recipient.first_name}}, we have exciting news about your {{customer.last_transaction.vehicle.make}}..."
-                required
-              ></textarea>
-            </div>
-            
-            <div class="form-group-grid two-col">
-              <div class="form-group">
-                <label for="body_bg_color">Body Background</label>
-                <input type="color" id="body_bg_color" name="body_bg_color" value="#ffffff">
-              </div>
-              <div class="form-group">
-                <label for="cta_color">Main Button Color</label>
-                <input type="color" id="cta_color" name="cta_color" value="#4f46e5">
-              </div>
-            </div>
-
-            <div class="form-group-grid two-col">
-              <div class="form-group">
-                <label for="cta">Main Button Text</label>
-                <input
-                  type="text"
-                  id="cta"
-                  name="cta"
-                  placeholder="See Our Specials"
-                />
-              </div>
-              <div class="form-group">
-                <label for="cta_link">Main Button Link</label>
-                <input
-                  type="text"
-                  id="cta_link"
-                  name="cta_link"
-                  placeholder="https://example.com/specials"
-                />
-              </div>
-            </div>
-            
-            <div class="form-group">
-              <label for="disclaimer">Disclaimer (optional)</label>
-              <textarea
-                id="disclaimer"
-                name="disclaimer"
-                rows="3"
-                placeholder="Prices and offers subject to change. See dealer for details."
-              ></textarea>
-            </div>
+          <div class="form-group">
+            <label for="email-body">Email Body</label>
+            <textarea
+              id="email-body"
+              name="email-body"
+              rows="6"
+              placeholder="e.g., Hi {{recipient.first_name}}, we have some exciting news about your {{customer.last_transaction.vehicle.make}}..."
+              required
+            ></textarea>
           </div>
-
-          <!-- Merge Fields Section -->
-          <div class="form-section">
-            <div class="merge-fields-container">
-              <h3>Insert Merge Fields</h3>
-              <div class="merge-fields-list">
-                <div class="merge-field-group">
-                  <button type="button" class="category-toggle">
-                    Recipient & Dealer
-                    <span class="toggle-icon"></span>
-                  </button>
-                  <div class="category-content">
-                    <div class="merge-field-item" data-value="{{recipient.first_name}}">
-                      <span>Recipient First Name</span><code>{{recipient.first_name}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.name}}">
-                      <span>Dealership Name</span><code>{{dealership.name}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.phone_number}}">
-                      <span>Dealership Phone</span><code>{{dealership.phone_number}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.address}}">
-                      <span>Dealership Address</span><code>{{dealership.address}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
-                      <span>Dealership Website</span><code>{{dealership.website_homepage_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.sales.representative.name}}">
-                      <span>Sales Rep Name</span><code>{{dealership.sales.representative.name}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.sales.representative.title}}">
-                      <span>Sales Rep Title</span><code>{{dealership.sales.representative.title}}</code>
-                    </div>
-                  </div>
-                </div>
-                <div class="merge-field-group">
-                  <button type="button" class="category-toggle">
-                    Customer Vehicle & Transaction
-                    <span class="toggle-icon"></span>
-                  </button>
-                  <div class="category-content">
-                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.year}}">
-                      <span>Vehicle Year</span><code>{{customer.last_transaction.vehicle.year}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.make}}">
-                      <span>Vehicle Make</span><code>{{customer.last_transaction.vehicle.make}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
-                      <span>Vehicle Model</span><code>{{customer.last_transaction.vehicle.model}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.vin}}">
-                      <span>Vehicle VIN</span><code>{{customer.last_transaction.vehicle.vin}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.equity_payout_formatted}}">
-                      <span>Equity Payout</span><code>{{customer.last_transaction.vehicle.equity_payout_formatted}}</code>
-                    </div>
-                  </div>
-                </div>
-                <div class="merge-field-group">
-                  <button type="button" class="category-toggle">
-                    Website Links
-                    <span class="toggle-icon"></span>
-                  </button>
-                  <div class="category-content">
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
-                      <span>Tracked Homepage (No LP)</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
-                      <span>Tracked Service (No LP)</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
-                      <span>Homepage URL</span><code>{{dealership.website_homepage_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_url}}">
-                      <span>Tracked Accessories</span><code>{{dealership.tracked_website_accessories_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_no_lp_url}}">
-                      <span>Tracked Accessories (No LP)</span><code>{{dealership.tracked_website_accessories_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_url}}">
-                      <span>Tracked Body Shop</span><code>{{dealership.tracked_website_body_shop_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_no_lp_url}}">
-                      <span>Tracked Body Shop (No LP)</span><code>{{dealership.tracked_website_body_shop_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_url}}">
-                      <span>Tracked Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_no_lp_url}}">
-                      <span>Tracked Service Scheduler (No LP)</span><code>{{dealership.tracked_website_service_scheduler_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_url}}">
-                      <span>Tracked Service Specials</span><code>{{dealership.tracked_website_service_specials_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_no_lp_url}}">
-                      <span>Tracked Service Specials (No LP)</span><code>{{dealership.tracked_website_service_specials_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.website_service_customer_reviews_url}}">
-                      <span>Service Reviews URL</span><code>{{dealership.website_service_customer_reviews_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_url}}">
-                      <span>Tracked Service Reviews</span><code>{{dealership.tracked_website_service_customer_reviews_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_no_lp_url}}">
-                      <span>Tracked Service Reviews (No LP)</span><code>{{dealership.tracked_website_service_customer_reviews_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_url}}">
-                      <span>Tracked Tires</span><code>{{dealership.tracked_website_tires_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_no_lp_url}}">
-                      <span>Tracked Tires (No LP)</span><code>{{dealership.tracked_website_tires_no_lp_url}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}">
-                      <span>Tracked Vehicle Acquisition (No LP)</span><code>{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}</code>
-                    </div>
-                  </div>
-                </div>
-                <div class="merge-field-group">
-                  <button type="button" class="category-toggle">
-                    Recall Data
-                    <span class="toggle-icon"></span>
-                  </button>
-                  <div class="category-content">
-                    <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_campaign_number}}">
-                      <span>Recall Campaign Number</span><code>{{customer.last_sold_vehicle.recall_campaign_number}}</code>
-                    </div>
-                    <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_description}}">
-                      <span>Recall Description</span><code>{{customer.last_sold_vehicle.recall_description}}</code>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="form-group">
+            <label for="body_bg_color">Email Body Background Color</label>
+            <input type="color" id="body_bg_color" name="body_bg_color" value="#ffffff">
+          </div>
+          <div class="form-group">
+            <label for="cta">Main Call to Action Button Text</label>
+            <input
+              type="text"
+              id="cta"
+              name="cta"
+              placeholder="e.g., See Our Specials"
+            />
+          </div>
+          <div class="form-group">
+            <label for="cta_link">Main Call to Action Button Link</label>
+            <input
+              type="text"
+              id="cta_link"
+              name="cta_link"
+              placeholder="e.g., https://example.com/specials"
+            />
+          </div>
+          <div class="form-group">
+              <label for="cta_color">Main CTA Button Color</label>
+              <input type="color" id="cta_color" name="cta_color" value="#4f46e5">
           </div>
 
           <!-- Offers Section -->
           <div class="offers-section">
-            <h2>Promotional Offers (optional)</h2>
+            <h2>Promotional Offers (optional, max 5)</h2>
             <div id="offers-container">
               <!-- Offer 1 -->
               <div class="offer-block" id="offer-block-1">
@@ -306,68 +128,74 @@
                       accept="image/png, image/jpeg"
                       class="offer-image-input"
                     />
+                    <div class="form-group-grid" style="margin-top: 12px;">
+                      <label for="offer_image_position_1">Image Position</label>
+                      <select id="offer_image_position_1" name="offer_image_position_1">
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="top">Top</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="offer-details-wrapper">
-                    <div class="form-group-grid two-col">
-                      <div>
-                        <label for="offer_vehicle_1">Vehicle/Product</label>
-                        <input
-                          type="text"
-                          id="offer_vehicle_1"
-                          name="offer_vehicle_1"
-                          placeholder="2024 Honda Civic"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_title_1">Offer Title</label>
-                        <input
-                          type="text"
-                          id="offer_title_1"
-                          name="offer_title_1"
-                          placeholder="Lease for $299/mo"
-                        />
-                      </div>
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_1">Vehicle / Product</label>
+                      <input
+                        type="text"
+                        id="offer_vehicle_1"
+                        name="offer_vehicle_1"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group-grid">
+                      <label for="offer_title_1">Offer Title</label>
+                      <input
+                        type="text"
+                        id="offer_title_1"
+                        name="offer_title_1"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
                       <label for="offer_details_1">Offer Details</label>
                       <textarea
                         id="offer_details_1"
                         name="offer_details_1"
                         rows="3"
-                        placeholder="36-month lease, $3,000 down payment required."
+                        placeholder="e.g., 36-month lease, $3,000 down."
                       ></textarea>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
-                        <label for="offer_cta_text_1">Button Text</label>
+                        <label for="offer_cta_text_1">CTA Text</label>
                         <input
                           type="text"
                           id="offer_cta_text_1"
                           name="offer_cta_text_1"
-                          placeholder="View Details"
+                          placeholder="View Inventory"
                         />
                       </div>
                       <div>
-                        <label for="offer_cta_link_1">Button Link</label>
+                        <label for="offer_cta_link_1">CTA Link</label>
                         <input
                           type="text"
                           id="offer_cta_link_1"
                           name="offer_cta_link_1"
-                          placeholder="https://example.com"
+                          placeholder="https://example.com/specials"
                         />
                       </div>
-                      <div>
-                        <label for="offer_cta_color_1">Button Color</label>
+                       <div>
+                        <label for="offer_cta_color_1">CTA Color</label>
                         <input type="color" id="offer_cta_color_1" name="offer_cta_color_1" value="#4f46e5">
                       </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group-grid">
                       <label for="offer_disclaimer_1">Disclaimer</label>
                       <textarea
                         id="offer_disclaimer_1"
                         name="offer_disclaimer_1"
                         rows="2"
-                        placeholder="W.A.C. See dealer for details."
+                        placeholder="e.g., W.A.C. See dealer for details."
                       ></textarea>
                     </div>
                   </div>
@@ -402,68 +230,74 @@
                       accept="image/png, image/jpeg"
                       class="offer-image-input"
                     />
+                    <div class="form-group-grid" style="margin-top: 12px;">
+                      <label for="offer_image_position_2">Image Position</label>
+                      <select id="offer_image_position_2" name="offer_image_position_2">
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="top">Top</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="offer-details-wrapper">
-                    <div class="form-group-grid two-col">
-                      <div>
-                        <label for="offer_vehicle_2">Vehicle/Product</label>
-                        <input
-                          type="text"
-                          id="offer_vehicle_2"
-                          name="offer_vehicle_2"
-                          placeholder="2024 Honda Civic"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_title_2">Offer Title</label>
-                        <input
-                          type="text"
-                          id="offer_title_2"
-                          name="offer_title_2"
-                          placeholder="Lease for $299/mo"
-                        />
-                      </div>
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_2">Vehicle / Product</label
+                      ><input
+                        type="text"
+                        id="offer_vehicle_2"
+                        name="offer_vehicle_2"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
                     </div>
-                    <div class="form-group">
-                      <label for="offer_details_2">Offer Details</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_title_2">Offer Title</label
+                      ><input
+                        type="text"
+                        id="offer_title_2"
+                        name="offer_title_2"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_details_2">Offer Details</label
+                      ><textarea
                         id="offer_details_2"
                         name="offer_details_2"
                         rows="3"
-                        placeholder="36-month lease, $3,000 down payment required."
+                        placeholder="e.g., 36-month lease, $3,000 down."
                       ></textarea>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
-                        <label for="offer_cta_text_2">Button Text</label>
-                        <input
+                        <label for="offer_cta_text_2">CTA Text</label
+                        ><input
                           type="text"
                           id="offer_cta_text_2"
                           name="offer_cta_text_2"
-                          placeholder="View Details"
+                          placeholder="View Inventory"
                         />
                       </div>
                       <div>
-                        <label for="offer_cta_link_2">Button Link</label>
-                        <input
+                        <label for="offer_cta_link_2">CTA Link</label
+                        ><input
                           type="text"
                           id="offer_cta_link_2"
                           name="offer_cta_link_2"
-                          placeholder="https://example.com"
+                          placeholder="https://example.com/specials"
                         />
                       </div>
-                      <div>
-                        <label for="offer_cta_color_2">Button Color</label>
+                       <div>
+                        <label for="offer_cta_color_2">CTA Color</label>
                         <input type="color" id="offer_cta_color_2" name="offer_cta_color_2" value="#4f46e5">
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label for="offer_disclaimer_2">Disclaimer</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_disclaimer_2">Disclaimer</label
+                      ><textarea
                         id="offer_disclaimer_2"
                         name="offer_disclaimer_2"
                         rows="2"
-                        placeholder="W.A.C. See dealer for details."
+                        placeholder="e.g., W.A.C. See dealer for details."
                       ></textarea>
                     </div>
                   </div>
@@ -498,68 +332,74 @@
                       accept="image/png, image/jpeg"
                       class="offer-image-input"
                     />
+                    <div class="form-group-grid" style="margin-top: 12px;">
+                      <label for="offer_image_position_3">Image Position</label>
+                      <select id="offer_image_position_3" name="offer_image_position_3">
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="top">Top</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="offer-details-wrapper">
-                    <div class="form-group-grid two-col">
-                      <div>
-                        <label for="offer_vehicle_3">Vehicle/Product</label>
-                        <input
-                          type="text"
-                          id="offer_vehicle_3"
-                          name="offer_vehicle_3"
-                          placeholder="2024 Honda Civic"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_title_3">Offer Title</label>
-                        <input
-                          type="text"
-                          id="offer_title_3"
-                          name="offer_title_3"
-                          placeholder="Lease for $299/mo"
-                        />
-                      </div>
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_3">Vehicle / Product</label
+                      ><input
+                        type="text"
+                        id="offer_vehicle_3"
+                        name="offer_vehicle_3"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
                     </div>
-                    <div class="form-group">
-                      <label for="offer_details_3">Offer Details</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_title_3">Offer Title</label
+                      ><input
+                        type="text"
+                        id="offer_title_3"
+                        name="offer_title_3"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_details_3">Offer Details</label
+                      ><textarea
                         id="offer_details_3"
                         name="offer_details_3"
                         rows="3"
-                        placeholder="36-month lease, $3,000 down payment required."
+                        placeholder="e.g., 36-month lease, $3,000 down."
                       ></textarea>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
-                        <label for="offer_cta_text_3">Button Text</label>
-                        <input
+                        <label for="offer_cta_text_3">CTA Text</label
+                        ><input
                           type="text"
                           id="offer_cta_text_3"
                           name="offer_cta_text_3"
-                          placeholder="View Details"
+                          placeholder="View Inventory"
                         />
                       </div>
                       <div>
-                        <label for="offer_cta_link_3">Button Link</label>
-                        <input
+                        <label for="offer_cta_link_3">CTA Link</label
+                        ><input
                           type="text"
                           id="offer_cta_link_3"
                           name="offer_cta_link_3"
-                          placeholder="https://example.com"
+                          placeholder="https://example.com/specials"
                         />
                       </div>
-                      <div>
-                        <label for="offer_cta_color_3">Button Color</label>
+                       <div>
+                        <label for="offer_cta_color_3">CTA Color</label>
                         <input type="color" id="offer_cta_color_3" name="offer_cta_color_3" value="#4f46e5">
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label for="offer_disclaimer_3">Disclaimer</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_disclaimer_3">Disclaimer</label
+                      ><textarea
                         id="offer_disclaimer_3"
                         name="offer_disclaimer_3"
                         rows="2"
-                        placeholder="W.A.C. See dealer for details."
+                        placeholder="e.g., W.A.C. See dealer for details."
                       ></textarea>
                     </div>
                   </div>
@@ -594,68 +434,74 @@
                       accept="image/png, image/jpeg"
                       class="offer-image-input"
                     />
+                    <div class="form-group-grid" style="margin-top: 12px;">
+                      <label for="offer_image_position_4">Image Position</label>
+                      <select id="offer_image_position_4" name="offer_image_position_4">
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="top">Top</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="offer-details-wrapper">
-                    <div class="form-group-grid two-col">
-                      <div>
-                        <label for="offer_vehicle_4">Vehicle/Product</label>
-                        <input
-                          type="text"
-                          id="offer_vehicle_4"
-                          name="offer_vehicle_4"
-                          placeholder="2024 Honda Civic"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_title_4">Offer Title</label>
-                        <input
-                          type="text"
-                          id="offer_title_4"
-                          name="offer_title_4"
-                          placeholder="Lease for $299/mo"
-                        />
-                      </div>
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_4">Vehicle / Product</label
+                      ><input
+                        type="text"
+                        id="offer_vehicle_4"
+                        name="offer_vehicle_4"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
                     </div>
-                    <div class="form-group">
-                      <label for="offer_details_4">Offer Details</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_title_4">Offer Title</label
+                      ><input
+                        type="text"
+                        id="offer_title_4"
+                        name="offer_title_4"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_details_4">Offer Details</label
+                      ><textarea
                         id="offer_details_4"
                         name="offer_details_4"
                         rows="3"
-                        placeholder="36-month lease, $3,000 down payment required."
+                        placeholder="e.g., 36-month lease, $3,000 down."
                       ></textarea>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
-                        <label for="offer_cta_text_4">Button Text</label>
-                        <input
+                        <label for="offer_cta_text_4">CTA Text</label
+                        ><input
                           type="text"
                           id="offer_cta_text_4"
                           name="offer_cta_text_4"
-                          placeholder="View Details"
+                          placeholder="View Inventory"
                         />
                       </div>
                       <div>
-                        <label for="offer_cta_link_4">Button Link</label>
-                        <input
+                        <label for="offer_cta_link_4">CTA Link</label
+                        ><input
                           type="text"
                           id="offer_cta_link_4"
                           name="offer_cta_link_4"
-                          placeholder="https://example.com"
+                          placeholder="https://example.com/specials"
                         />
                       </div>
-                      <div>
-                        <label for="offer_cta_color_4">Button Color</label>
+                       <div>
+                        <label for="offer_cta_color_4">CTA Color</label>
                         <input type="color" id="offer_cta_color_4" name="offer_cta_color_4" value="#4f46e5">
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label for="offer_disclaimer_4">Disclaimer</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_disclaimer_4">Disclaimer</label
+                      ><textarea
                         id="offer_disclaimer_4"
                         name="offer_disclaimer_4"
                         rows="2"
-                        placeholder="W.A.C. See dealer for details."
+                        placeholder="e.g., W.A.C. See dealer for details."
                       ></textarea>
                     </div>
                   </div>
@@ -690,69 +536,74 @@
                       accept="image/png, image/jpeg"
                       class="offer-image-input"
                     />
+                    <div class="form-group-grid" style="margin-top: 12px;">
+                      <label for="offer_image_position_5">Image Position</label>
+                      <select id="offer_image_position_5" name="offer_image_position_5">
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="top">Top</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="offer-details-wrapper">
-                    <div class="form-group-grid two-col">
-                      <div>
-                        <label for="offer_vehicle_5">Vehicle/Product</label>
-                        <input
-                          type="text"
-                          id="offer_vehicle_5"
-                          name="offer_vehicle_5"
-                          placeholder="2024 Honda Civic"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_title_5">Offer Title</label>
-                        <input
-                          type="text"
-                          id="offer_title_5"
-                          name="offer_title_5"
-                          placeholder="Lease for $299/mo"
-                        />
-                      </div>
+                    <div class="form-group-grid">
+                      <label for="offer_vehicle_5">Vehicle / Product</label
+                      ><input
+                        type="text"
+                        id="offer_vehicle_5"
+                        name="offer_vehicle_5"
+                        placeholder="e.g., 2024 Honda Civic"
+                      />
                     </div>
-                    <div class="form-group">
-                      <label for="offer_details_5">Offer Details</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_title_5">Offer Title</label
+                      ><input
+                        type="text"
+                        id="offer_title_5"
+                        name="offer_title_5"
+                        placeholder="e.g., Lease for $299/mo"
+                      />
+                    </div>
+                    <div class="form-group-grid">
+                      <label for="offer_details_5">Offer Details</label
+                      ><textarea
                         id="offer_details_5"
                         name="offer_details_5"
                         rows="3"
-                        placeholder="36-month lease, $3,000 down payment required."
+                        placeholder="e.g., 36-month lease, $3,000 down."
                       ></textarea>
-                      <small class="formatting-hint">Use HTML tags like &lt;strong&gt;, &lt;em&gt;, &lt;u&gt; for formatting</small>
                     </div>
                     <div class="form-group-grid three-col">
                       <div>
-                        <label for="offer_cta_text_5">Button Text</label>
-                        <input
+                        <label for="offer_cta_text_5">CTA Text</label
+                        ><input
                           type="text"
                           id="offer_cta_text_5"
                           name="offer_cta_text_5"
-                          placeholder="View Details"
+                          placeholder="View Inventory"
                         />
                       </div>
                       <div>
-                        <label for="offer_cta_link_5">Button Link</label>
-                        <input
+                        <label for="offer_cta_link_5">CTA Link</label
+                        ><input
                           type="text"
                           id="offer_cta_link_5"
                           name="offer_cta_link_5"
-                          placeholder="https://example.com"
+                          placeholder="https://example.com/specials"
                         />
                       </div>
-                      <div>
-                        <label for="offer_cta_color_5">Button Color</label>
+                       <div>
+                        <label for="offer_cta_color_5">CTA Color</label>
                         <input type="color" id="offer_cta_color_5" name="offer_cta_color_5" value="#4f46e5">
                       </div>
                     </div>
-                    <div class="form-group">
-                      <label for="offer_disclaimer_5">Disclaimer</label>
-                      <textarea
+                    <div class="form-group-grid">
+                      <label for="offer_disclaimer_5">Disclaimer</label
+                      ><textarea
                         id="offer_disclaimer_5"
                         name="offer_disclaimer_5"
                         rows="2"
-                        placeholder="W.A.C. See dealer for details."
+                        placeholder="e.g., W.A.C. See dealer for details."
                       ></textarea>
                     </div>
                   </div>
@@ -766,32 +617,32 @@
 
           <!-- Footer CTAs Section -->
           <div class="footer-ctas-section">
-            <h2>Footer Links (optional)</h2>
-            <p>Add up to 3 secondary links that appear at the bottom of your email.</p>
+            <h2>Footer Call to Actions (optional, max 3)</h2>
+            <p>These links will appear at the bottom of the email, useful for secondary actions.</p>
             <div class="form-group-grid two-col">
-              <div class="form-group">
-                <label for="footer_bg_color">Section Background</label>
-                <input type="color" id="footer_bg_color" name="footer_bg_color" value="#ffffff">
-              </div>
-              <div class="form-group">
-                <label for="footer_cta_text_color">Link Color</label>
-                <input type="color" id="footer_cta_text_color" name="footer_cta_text_color" value="#4f46e5">
-              </div>
+                <div class="form-group">
+                    <label for="footer_bg_color">Section Background</label>
+                    <input type="color" id="footer_bg_color" name="footer_bg_color" value="#ffffff">
+                </div>
+                <div class="form-group">
+                    <label for="footer_cta_text_color">Link Color</label>
+                    <input type="color" id="footer_cta_text_color" name="footer_cta_text_color" value="#4f46e5">
+                </div>
             </div>
             <div id="footer-ctas-container">
               <!-- CTA 1 -->
               <div class="footer-cta-block" id="footer-cta-block-1">
-                <div class="footer-cta-header">
-                  <h4>Link 1</h4>
-                </div>
+                 <div class="footer-cta-header">
+                    <h4>Link 1</h4>
+                 </div>
                 <div class="form-group-grid two-col">
                   <div>
                     <label for="footer_cta_text_1">Link Text</label>
-                    <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" placeholder="Visit Our Website">
+                    <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" value="Get In Touch">
                   </div>
                   <div>
                     <label for="footer_cta_link_1">Link URL</label>
-                    <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" placeholder="{{dealership.tracked_website_homepage_no_lp_url}}">
+                    <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" value="{{dealership.tracked_website_homepage_no_lp_url}}">
                   </div>
                 </div>
               </div>
@@ -833,8 +684,18 @@
             <button type="button" id="add-footer-cta-btn" class="secondary-btn">Add Another Link</button>
           </div>
 
+          <div class="form-group">
+            <label for="disclaimer">Overall Disclaimer (optional)</label>
+            <textarea
+              id="disclaimer"
+              name="disclaimer"
+              rows="4"
+              placeholder="e.g., This is a promotional email. Prices and offers subject to change."
+            ></textarea>
+          </div>
+
           <button type="submit" id="generate-btn">
-            <span class="btn-text">Generate Email Template</span>
+            <span class="btn-text">Generate Template</span>
             <div class="spinner" style="display: none"></div>
           </button>
         </form>
@@ -843,17 +704,23 @@
         <div class="output-panel">
           <div class="panel-header">
             <h2>Preview</h2>
+            <div class="view-toggle">
+              <button id="desktop-view-btn" class="view-btn active" data-view="desktop">Desktop</button>
+              <button id="mobile-view-btn" class="view-btn" data-view="mobile">Mobile</button>
+            </div>
           </div>
           <div class="preview-container">
-            <iframe id="preview-pane" title="Email Preview"></iframe>
+            <div class="preview-wrapper">
+              <iframe id="preview-pane" title="Email Preview" class="desktop-preview"></iframe>
+            </div>
           </div>
         </div>
         <div class="output-panel">
           <div class="panel-header">
             <h2>HTML Code</h2>
-            <div class="button-group">
-              <button id="copy-btn">Copy HTML</button>
-              <button id="download-btn">Download HTML</button>
+            <div class="code-actions">
+              <button id="download-btn" class="action-btn">Download HTML</button>
+              <button id="copy-btn" class="action-btn primary">Copy HTML</button>
             </div>
           </div>
           <div class="code-container">
@@ -868,5 +735,149 @@
         <p>Created by Jayden Wallace © 2025</p>
       </footer>
     </main>
+    
+    <!-- Merge Fields Sidebar -->
+    <div id="merge-fields-sidebar" class="merge-fields-sidebar">
+      <div class="sidebar-header">
+        <h3>Insert Merge Field</h3>
+        <button type="button" id="close-sidebar" class="close-sidebar-btn">&times;</button>
+      </div>
+      <div class="sidebar-content">
+        <div class="merge-fields-list">
+          <div class="merge-field-group">
+            <button type="button" class="category-toggle">
+              Recipient & Dealer
+              <span class="toggle-icon"></span>
+            </button>
+            <div class="category-content">
+              <div class="merge-field-item" data-value="{{recipient.first_name}}">
+                <span>Recipient First Name</span><code>{{recipient.first_name}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.name}}">
+                <span>Dealership Name</span><code>{{dealership.name}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.phone_number}}">
+                <span>Dealership Phone</span><code>{{dealership.phone_number}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.address}}">
+                <span>Dealership Address</span><code>{{dealership.address}}</code>
+              </div>
+               <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
+                <span>Dealership Website</span><code>{{dealership.website_homepage_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.sales.representative.name}}">
+                <span>Sales Rep Name</span><code>{{dealership.sales.representative.name}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.sales.representative.title}}">
+                <span>Sales Rep Title</span><code>{{dealership.sales.representative.title}}</code>
+              </div>
+            </div>
+          </div>
+          <div class="merge-field-group">
+            <button type="button" class="category-toggle">
+              Customer Vehicle & Transaction
+              <span class="toggle-icon"></span>
+            </button>
+            <div class="category-content">
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.year}}">
+                <span>Vehicle Year</span><code>{{customer.last_transaction.vehicle.year}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.make}}">
+                <span>Vehicle Make</span><code>{{customer.last_transaction.vehicle.make}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
+                <span>Vehicle Model</span><code>{{customer.last_transaction.vehicle.model}}</code>
+              </div>
+               <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.vin}}">
+                <span>Vehicle VIN</span><code>{{customer.last_transaction.vehicle.vin}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.equity_payout_formatted}}">
+                <span>Equity Payout</span><code>{{customer.last_transaction.vehicle.equity_payout_formatted}}</code>
+              </div>
+            </div>
+          </div>
+           <div class="merge-field-group">
+            <button type="button" class="category-toggle">
+              Website Links
+              <span class="toggle-icon"></span>
+            </button>
+            <div class="category-content">
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
+                  <span>Tracked Homepage (No LP)</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
+                  <span>Tracked Service (No LP)</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
+                  <span>Homepage URL</span><code>{{dealership.website_homepage_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_url}}">
+                  <span>Tracked Accessories</span><code>{{dealership.tracked_website_accessories_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_no_lp_url}}">
+                  <span>Tracked Accessories (No LP)</span><code>{{dealership.tracked_website_accessories_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_url}}">
+                  <span>Tracked Body Shop</span><code>{{dealership.tracked_website_body_shop_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_no_lp_url}}">
+                  <span>Tracked Body Shop (No LP)</span><code>{{dealership.tracked_website_body_shop_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_url}}">
+                  <span>Tracked Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_no_lp_url}}">
+                  <span>Tracked Service Scheduler (No LP)</span><code>{{dealership.tracked_website_service_scheduler_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_url}}">
+                  <span>Tracked Service Specials</span><code>{{dealership.tracked_website_service_specials_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_no_lp_url}}">
+                  <span>Tracked Service Specials (No LP)</span><code>{{dealership.tracked_website_service_specials_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.website_service_customer_reviews_url}}">
+                  <span>Service Reviews URL</span><code>{{dealership.website_service_customer_reviews_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_url}}">
+                  <span>Tracked Service Reviews</span><code>{{dealership.tracked_website_service_customer_reviews_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_no_lp_url}}">
+                  <span>Tracked Service Reviews (No LP)</span><code>{{dealership.tracked_website_service_customer_reviews_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_url}}">
+                  <span>Tracked Tires</span><code>{{dealership.tracked_website_tires_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_no_lp_url}}">
+                  <span>Tracked Tires (No LP)</span><code>{{dealership.tracked_website_tires_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}">
+                  <span>Tracked Vehicle Acquisition (No LP)</span><code>{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}</code>
+              </div>
+            </div>
+          </div>
+           <div class="merge-field-group">
+              <button type="button" class="category-toggle">
+                Recall Data
+                <span class="toggle-icon"></span>
+              </button>
+              <div class="category-content">
+                <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_campaign_number}}">
+                    <span>Recall Campaign Number</span><code>{{customer.last_sold_vehicle.recall_campaign_number}}</code>
+                </div>
+                <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_description}}">
+                    <span>Recall Description</span><code>{{customer.last_sold_vehicle.recall_description}}</code>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    
+    <!-- Floating Merge Fields Button -->
+    <button type="button" id="floating-merge-btn" class="floating-merge-btn" title="Insert Merge Fields">
+      <span class="btn-icon"></span>
+    </button>
   </body>
 </html>

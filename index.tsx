@@ -1,3 +1,4 @@
+
 /**
  * @license
  * Copyright Wallace, Jayden
@@ -25,6 +26,7 @@ interface OfferData {
   ctaText?: string;
   ctaLink?: string;
   ctaColor?: string;
+  ctaTextColor?: string;
   disclaimer?: string;
   imageDataUrl?: string;
 }
@@ -38,16 +40,24 @@ interface EmailData {
   emailStyle: string;
   bodyContent: string;
   bodyBackgroundColor: string;
+  heroMessage?: string;
+  heroMessageColor?: string;
+  heroMessageFontSize?: string;
+  heroMessageBgColor?: string;
   heroImage: string;
   ctaText: string;
   ctaLink: string;
   ctaColor: string;
+  ctaTextColor: string;
   offers: OfferData[];
   disclaimer: string;
   fontFamily: string;
   footerCtas: FooterCta[];
   footerBackgroundColor: string;
+  footerCtaBgColor: string;
   footerCtaTextColor: string;
+  buttonStyle: string;
+  layoutStyle: string;
 }
 
 // Design and visual customization settings
@@ -58,11 +68,21 @@ const designSettings: DesignSettings = {
   buttonStyle: 'rounded'
 };
 
+const schemeColors: Record<string, ColorScheme> = {
+  modern: { primary: '#007aff', bg: '#ffffff', text: '#1d1d1f' },
+  warm: { primary: '#ff6b35', bg: '#fff8f5', text: '#2d1810' },
+  elegant: { primary: '#6366f1', bg: '#fafafa', text: '#1e293b' },
+  nature: { primary: '#10b981', bg: '#f0fdf4', text: '#14532d' },
+  corporate: { primary: '#374151', bg: '#ffffff', text: '#111827' },
+  vibrant: { primary: '#ec4899', bg: '#fdf2f8', text: '#831843' }
+};
+
 // DOM Elements
 const emailForm = document.getElementById('email-form') as HTMLFormElement;
 const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
 const outputContainer = document.getElementById('output-container') as HTMLElement;
 const outputPlaceholder = document.getElementById('output-placeholder') as HTMLElement;
+const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
 
 // Sidebar elements
 const designSidebar = document.getElementById('design-sidebar') as HTMLElement;
@@ -77,6 +97,15 @@ const floatingMergeBtn = document.getElementById('floating-merge-btn') as HTMLBu
 // Close buttons
 const closeDesignSidebar = document.getElementById('close-design-sidebar') as HTMLButtonElement;
 const closeMergeSidebar = document.getElementById('close-sidebar') as HTMLButtonElement;
+
+// Dynamic Section Elements
+const offersContainer = document.getElementById('offers-container') as HTMLElement;
+const addOfferBtn = document.getElementById('add-offer-btn') as HTMLButtonElement;
+let nextOfferIndex = 1;
+
+const footerCtasContainer = document.getElementById('footer-ctas-container') as HTMLElement;
+const addFooterCtaBtn = document.getElementById('add-footer-cta-btn') as HTMLButtonElement;
+let nextFooterCtaIndex = 1;
 
 // Utility functions
 const readFileAsDataURL = (file: File): Promise<string> => {
@@ -98,21 +127,39 @@ const getContrastColor = (hexColor: string): string => {
   return (brightness > 125) ? '#333333' : '#ffffff';
 };
 
+// Function to resize the iframe to fit its content
+const resizeDesktopPreview = () => {
+    // Ensure we are in desktop view and the iframe content is accessible
+    if (previewPane.classList.contains('desktop') && previewPane.contentWindow && previewPane.contentWindow.document.body) {
+      const contentHeight = previewPane.contentWindow.document.body.scrollHeight;
+      // Set a minimum height for smaller emails, but allow it to grow
+      previewPane.style.height = `${Math.max(contentHeight, 600)}px`;
+    }
+  };
+
 // Email HTML generation
 const generateEmailHtml = (data: EmailData): string => {
   const {
     bodyContent,
+    heroMessage,
+    heroMessageColor,
+    heroMessageFontSize,
+    heroMessageBgColor,
     heroImage,
     ctaText,
     ctaLink,
     ctaColor,
+    ctaTextColor,
     offers,
     disclaimer,
     bodyBackgroundColor,
     fontFamily,
     footerCtas,
     footerBackgroundColor,
+    footerCtaBgColor,
     footerCtaTextColor,
+    buttonStyle,
+    layoutStyle,
   } = data;
 
   const mainButtonColor = ctaColor || '#4f46e5';
@@ -122,7 +169,59 @@ const generateEmailHtml = (data: EmailData): string => {
   const msoFont = emailFont.split(',')[0].replace(/'/g, '').trim();
   const footerBg = footerBackgroundColor || '#ffffff';
   const footerButtonBg = footerBg;
-  const footerButtonText = footerCtaTextColor || '#4f46e5';
+  const footerButtonBgColor = footerCtaBgColor || '#4f46e5';
+
+  // Layout Style modifications
+  const layoutStyles = {
+    mainContainerStyle: '',
+    spacerHeight: '20px',
+  };
+  if (layoutStyle === 'card-style') {
+    layoutStyles.mainContainerStyle = 'border: 1px solid #e2e8f0;';
+  } else if (layoutStyle === 'minimal') {
+    layoutStyles.spacerHeight = '30px';
+  }
+
+  const renderButton = (text: string, link: string, color: string, style: string, bgColor: string, options: { width: string; height: string; fontSize: string; }, textColorOverride?: string) => {
+    let borderRadius: string;
+    let msoArcSize: string;
+    let border: string;
+    let backgroundColor: string;
+    let textColor: string;
+    let msoFillColor: string;
+    let msoTextColor: string;
+
+    switch (style) {
+      case 'pill':
+        borderRadius = '9999px'; msoArcSize = '50%'; border = 'none';
+        backgroundColor = color; textColor = textColorOverride || getContrastColor(color);
+        break;
+      case 'square':
+        borderRadius = '0px'; msoArcSize = '0%'; border = 'none';
+        backgroundColor = color; textColor = textColorOverride || getContrastColor(color);
+        break;
+      case 'outlined':
+        borderRadius = '8px'; msoArcSize = '13%'; border = `1px solid ${color}`;
+        backgroundColor = bgColor; textColor = textColorOverride || color;
+        break;
+      case 'rounded':
+      default:
+        borderRadius = '8px'; msoArcSize = '13%'; border = 'none';
+        backgroundColor = color; textColor = textColorOverride || getContrastColor(color);
+        break;
+    }
+
+    msoFillColor = style === 'outlined' ? color : backgroundColor;
+    msoTextColor = textColor;
+
+    return `<div><!--[if mso]>
+      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${link}" style="height:${options.height};v-text-anchor:middle;width:${options.width};" arcsize="${msoArcSize}" strokecolor="${color}" fillcolor="${msoFillColor}">
+        <w:anchorlock/>
+        <center style="color:${msoTextColor};font-family:${msoFont}, sans-serif;font-size:${options.fontSize};font-weight:bold;">${text}</center>
+      </v:roundrect>
+    <![endif]--><a href="${link}"
+    style="background-color:${backgroundColor};border:${border};border-radius:${borderRadius};color:${textColor};display:inline-block;font-family:${emailFont};font-size:${options.fontSize};font-weight:bold;line-height:${options.height};text-align:center;text-decoration:none;width:${options.width};-webkit-text-size-adjust:none;mso-hide:all;">${text}</a></div>`;
+  };
 
   const renderOffer = (offer: OfferData): string => {
     if (!offer.title && !offer.vehicle && !offer.details) return '';
@@ -134,14 +233,9 @@ const generateEmailHtml = (data: EmailData): string => {
       <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
       <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
       <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details?.replace(/\n/g, '<br />') || ''}</p>
-      ${ offer.ctaText && offer.ctaLink ? `
-        <div><!--[if mso]>
-          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
-            <w:anchorlock/>
-            <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${offer.ctaText}</center>
-          </v:roundrect>
-        <![endif]--><a href="${offer.ctaLink}"
-        style="background-color:${offerButtonColor};border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">${offer.ctaText}</a></div>` : ''
+      ${ offer.ctaText && offer.ctaLink ?
+        renderButton(offer.ctaText, offer.ctaLink, offerButtonColor, buttonStyle, '#ffffff', { width: '150px', height: '40px', fontSize: '14px'}, offer.ctaTextColor)
+        : ''
       }
       ${ offer.disclaimer ? `<p style="margin: 15px 0 0 0; font-size: 8px; color: #718096; line-height: 1.5;">${offer.disclaimer.replace(/\n/g, '<br />')}</p>` : '' }
     `;
@@ -155,7 +249,7 @@ const generateEmailHtml = (data: EmailData): string => {
             </div>
           </td>
         </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+        <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>`;
     }
 
     if (imagePosition === 'top') {
@@ -176,7 +270,7 @@ const generateEmailHtml = (data: EmailData): string => {
             </table>
           </td>
         </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+        <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>`;
     } else if (imagePosition === 'right') {
       return `
         <tr>
@@ -193,7 +287,7 @@ const generateEmailHtml = (data: EmailData): string => {
             </table>
           </td>
         </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+        <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>`;
     } else {
       return `
         <tr>
@@ -210,14 +304,14 @@ const generateEmailHtml = (data: EmailData): string => {
             </table>
           </td>
         </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
+        <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>`;
     }
   };
 
   const offersHtml = offers.map(renderOffer).join('');
 
   const footerCtasHtml = footerCtas && footerCtas.length > 0 ? `
-    <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
+    <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
     <tr>
       <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: ${footerBg};">
         <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -226,14 +320,7 @@ const generateEmailHtml = (data: EmailData): string => {
               return `
               <tr>
                 <td align="center" style="padding-bottom: ${index < footerCtas.length - 1 ? '15px' : '0'};">
-                  <!--[if mso]>
-                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${cta.link}" style="height:40px;v-text-anchor:middle;width:250px;" arcsize="13%" strokecolor="${footerButtonBg}" fillcolor="${footerButtonBg}">
-                      <w:anchorlock/>
-                      <center style="color:${footerButtonText};font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${cta.text}</center>
-                    </v:roundrect>
-                  <![endif]-->
-                  <a href="${cta.link}" target="_blank"
-                  style="background-color:${footerButtonBg};border:none;border-radius:5px;color:${footerButtonText};display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:250px;-webkit-text-size-adjust:none;mso-hide:all;">${cta.text}</a>
+                  ${renderButton(cta.text, cta.link, footerButtonBgColor, buttonStyle, footerButtonBg, { width: '250px', height: '40px', fontSize: '14px' }, footerCtaTextColor)}
                 </td>
               </tr>
               `;
@@ -242,6 +329,15 @@ const generateEmailHtml = (data: EmailData): string => {
         </table>
       </td>
     </tr>
+  ` : '';
+
+  const heroMessageHtml = heroMessage ? `
+  <tr>
+    <td align="center" bgcolor="${heroMessageBgColor || 'transparent'}" style="padding: 20px; background-color: ${heroMessageBgColor || 'transparent'}; font-family: ${emailFont}; font-size: ${heroMessageFontSize || '24'}px; line-height: 1.3; color: ${heroMessageColor || '#1d1d1f'}; font-weight: bold; border-radius: 8px;">
+      ${heroMessage.replace(/\n/g, '<br />')}
+    </td>
+  </tr>
+  <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
   ` : '';
 
   return `
@@ -297,34 +393,29 @@ const generateEmailHtml = (data: EmailData): string => {
                               <img src="${heroImage}" alt="Hero Image" width="600" style="width: 100%; max-width: 600px; height: auto; margin: auto; display: block; border-radius: 8px;">
                             </td>
                           </tr>
-                          <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
+                          <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
                           ` : ''
                         }
+                        ${heroMessageHtml}
                           <tr>
-                              <td style="padding: 10px 20px; background-color: ${mainBodyBg}; border-radius: 8px;">
+                              <td style="padding: 10px 20px; background-color: ${mainBodyBg}; border-radius: 8px; ${layoutStyles.mainContainerStyle}">
                                   <p style="margin: 0; color: ${mainBodyTextColor};">${bodyContent.replace(/\n/g, '<br />')}</p>
                               </td>
                           </tr>
-                          <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
+                          <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
                           ${ ctaText && ctaLink ? `
                           <tr>
                               <td align="center">
                                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                       <tr>
                                           <td>
-                                            <div><!--[if mso]>
-                                              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${ctaLink}" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="10%" strokecolor="${mainButtonColor}" fillcolor="${mainButtonColor}">
-                                                <w:anchorlock/>
-                                                <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:16px;font-weight:bold;">${ctaText}</center>
-                                              </v:roundrect>
-                                            <![endif]--><a href="${ctaLink}"
-                                            style="background-color:${mainButtonColor};border:none;border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:16px;font-weight:bold;line-height:50px;text-align:center;text-decoration:none;width:200px;-webkit-text-size-adjust:none;mso-hide:all;">${ctaText}</a></div>
+                                            ${renderButton(ctaText, ctaLink, mainButtonColor, buttonStyle, mainBodyBg, { width: '200px', height: '50px', fontSize: '16px' }, ctaTextColor)}
                                           </td>
                                       </tr>
                                   </table>
                               </td>
                           </tr>
-                          <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
+                          <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
                           `: ''}
                           ${offersHtml ? `<tr><td><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">${offersHtml}</table></td></tr>` : '' }
                           ${footerCtasHtml}
@@ -393,7 +484,26 @@ document.querySelectorAll('.color-scheme-option').forEach(option => {
     document.querySelectorAll('.color-scheme-option').forEach(o => o.classList.remove('selected'));
     option.classList.add('selected');
     const dataset = (option as HTMLElement).dataset;
-    designSettings.colorScheme = dataset.scheme || 'modern';
+    const schemeName = dataset.scheme || 'modern';
+    designSettings.colorScheme = schemeName;
+
+    const colors = schemeColors[schemeName];
+    if (colors) {
+      (document.getElementById('hero_message_bg_color') as HTMLInputElement).value = colors.bg;
+      (document.getElementById('body_bg_color') as HTMLInputElement).value = colors.bg;
+      (document.getElementById('cta_color') as HTMLInputElement).value = colors.primary;
+      (document.getElementById('cta_text_color') as HTMLInputElement).value = getContrastColor(colors.primary);
+
+      document.querySelectorAll<HTMLInputElement>('input[id^="offer_cta_color_"]').forEach(input => {
+        input.value = colors.primary;
+      });
+      document.querySelectorAll<HTMLInputElement>('input[id^="offer_cta_text_color_"]').forEach(input => {
+        input.value = getContrastColor(colors.primary);
+      });
+      (document.getElementById('footer_bg_color') as HTMLInputElement).value = colors.bg;
+      (document.getElementById('footer_cta_bg_color') as HTMLInputElement).value = colors.primary;
+      (document.getElementById('footer_cta_text_color') as HTMLInputElement).value = getContrastColor(colors.primary);
+    }
     console.log('Color scheme updated:', designSettings.colorScheme);
   });
 });
@@ -443,6 +553,188 @@ document.querySelectorAll('.accordion-header').forEach(header => {
   });
 });
 
+// Dynamic form sections (Offers & Footer CTAs)
+
+// --- Offers Logic ---
+const setupOfferImagePreview = (index: number) => {
+  const offerImageInput = document.getElementById(`offer_image_${index}`) as HTMLInputElement;
+  const offerImagePreview = document.getElementById(`offer_image_preview_${index}`) as HTMLImageElement;
+
+  if (offerImageInput && offerImagePreview) {
+    offerImageInput.addEventListener('change', async (event) => {
+      const input = event.target as HTMLInputElement;
+      if (input.files && input.files[0]) {
+        try {
+          const imageDataUrl = await readFileAsDataURL(input.files[0]);
+          offerImagePreview.src = imageDataUrl;
+        } catch (error) {
+          console.error(`Error reading file for offer ${index}:`, error);
+          offerImagePreview.src = `https://placehold.co/200x200/f1f3f5/6c757d?text=Image`;
+        }
+      } else {
+        offerImagePreview.src = `https://placehold.co/200x200/f1f3f5/6c757d?text=Image`;
+      }
+    });
+  }
+};
+
+const createOfferBlockHtml = (index: number): string => `
+  <div class="offer-block" id="offer-block-${index}">
+    <div class="offer-header">
+      <h4 class="text-xl">Offer ${index}</h4>
+      ${index > 1 ? `<button type="button" class="btn btn-secondary btn-sm remove-offer-btn" data-offer-index="${index}" style="padding: 4px 8px; font-size: 12px; border-color: var(--destructive); color: var(--destructive); background: transparent;">Remove</button>` : ''}
+    </div>
+    <div class="offer-body">
+      <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+        <label class="form-label" style="text-align: center;">Offer Image</label>
+        <img id="offer_image_preview_${index}" src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image" alt="Offer ${index} image preview" class="offer-image-preview"/>
+        <input type="file" id="offer_image_${index}" name="offer_image_${index}" accept="image/png, image/jpeg" class="form-control"/>
+        <div class="form-group">
+          <label for="offer_image_position_${index}" class="form-label">Image Position</label>
+          <select id="offer_image_position_${index}" name="offer_image_position_${index}" class="form-control">
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+            <option value="top">Top</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+        <div class="form-group">
+          <label for="offer_vehicle_${index}" class="form-label">Vehicle / Product</label>
+          <input type="text" id="offer_vehicle_${index}" name="offer_vehicle_${index}" placeholder="e.g., 2024 Honda Civic" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label for="offer_title_${index}" class="form-label">Offer Title</label>
+          <input type="text" id="offer_title_${index}" name="offer_title_${index}" placeholder="e.g., Lease for $299/mo" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label for="offer_details_${index}" class="form-label">Offer Details</label>
+          <textarea id="offer_details_${index}" name="offer_details_${index}" rows="3" placeholder="e.g., 36-month lease, $3,000 down." class="form-control"></textarea>
+        </div>
+        <div class="grid grid-cols-2">
+          <div class="form-group">
+            <label for="offer_cta_text_${index}" class="form-label">CTA Text</label>
+            <input type="text" id="offer_cta_text_${index}" name="offer_cta_text_${index}" placeholder="View Inventory" class="form-control"/>
+          </div>
+          <div class="form-group">
+            <label for="offer_cta_link_${index}" class="form-label">CTA Link</label>
+            <input type="text" id="offer_cta_link_${index}" name="offer_cta_link_${index}" placeholder="https://example.com/specials" class="form-control"/>
+          </div>
+        </div>
+        <div class="grid grid-cols-2">
+          <div class="form-group">
+            <label for="offer_cta_color_${index}" class="form-label">CTA BG Color</label>
+            <input type="color" id="offer_cta_color_${index}" name="offer_cta_color_${index}" value="#4f46e5" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="offer_cta_text_color_${index}" class="form-label">CTA Text Color</label>
+            <input type="color" id="offer_cta_text_color_${index}" name="offer_cta_text_color_${index}" value="#ffffff" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="offer_disclaimer_${index}" class="form-label">Disclaimer</label>
+          <textarea id="offer_disclaimer_${index}" name="offer_disclaimer_${index}" rows="2" placeholder="e.g., W.A.C. See dealer for details." class="form-control"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+const addOffer = () => {
+    if (offersContainer.children.length >= 5) return;
+
+    const newOfferHtml = createOfferBlockHtml(nextOfferIndex);
+    offersContainer.insertAdjacentHTML('beforeend', newOfferHtml);
+    setupOfferImagePreview(nextOfferIndex);
+
+    const currentSchemeName = document.querySelector('.color-scheme-option.selected')?.getAttribute('data-scheme') || 'modern';
+    const colors = schemeColors[currentSchemeName];
+    if (colors) {
+        const offerCtaColor = document.getElementById(`offer_cta_color_${nextOfferIndex}`) as HTMLInputElement | null;
+        if (offerCtaColor) offerCtaColor.value = colors.primary;
+        const offerCtaTextColor = document.getElementById(`offer_cta_text_color_${nextOfferIndex}`) as HTMLInputElement | null;
+        if (offerCtaTextColor) offerCtaTextColor.value = getContrastColor(colors.primary);
+    }
+
+    nextOfferIndex++;
+    if (offersContainer.children.length >= 5) {
+        addOfferBtn.disabled = true;
+        addOfferBtn.textContent = 'Maximum Offers Reached';
+    }
+};
+
+addOfferBtn.addEventListener('click', addOffer);
+
+offersContainer.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('remove-offer-btn')) {
+        const index = target.dataset.offerIndex;
+        const blockToRemove = document.getElementById(`offer-block-${index}`);
+        if (blockToRemove) {
+            blockToRemove.remove();
+            if (offersContainer.children.length < 5) {
+                addOfferBtn.disabled = false;
+                addOfferBtn.textContent = 'Add Another Offer';
+            }
+        }
+    }
+});
+
+// --- Footer CTAs Logic ---
+const createFooterCtaBlockHtml = (index: number): string => `
+  <div class="card mb-4" id="footer-cta-block-${index}">
+    <div class="card-header">
+      <h4 class="text-lg">Link ${index}</h4>
+      ${index > 1 ? `<button type="button" class="btn btn-secondary btn-sm remove-footer-cta-btn" data-cta-index="${index}" style="padding: 4px 8px; font-size: 12px; border-color: var(--destructive); color: var(--destructive); background: transparent;">Remove</button>` : ''}
+    </div>
+    <div class="card-body">
+      <div class="grid grid-cols-2">
+        <div class="form-group">
+          <label for="footer_cta_text_${index}" class="form-label">Link Text</label>
+          <input type="text" id="footer_cta_text_${index}" name="footer_cta_text_${index}" placeholder="Get In Touch" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="footer_cta_link_${index}" class="form-label">Link URL</label>
+          <input type="text" id="footer_cta_link_${index}" name="footer_cta_link_${index}" placeholder="{{dealership.tracked_website_homepage_no_lp_url}}" class="form-control">
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+const addFooterCta = () => {
+    if (footerCtasContainer.children.length >= 3) return;
+
+    const newCtaHtml = createFooterCtaBlockHtml(nextFooterCtaIndex);
+    footerCtasContainer.insertAdjacentHTML('beforeend', newCtaHtml);
+    nextFooterCtaIndex++;
+    
+    if (footerCtasContainer.children.length >= 3) {
+        addFooterCtaBtn.disabled = true;
+        addFooterCtaBtn.textContent = 'Maximum Links Reached';
+    }
+};
+
+addFooterCtaBtn.addEventListener('click', addFooterCta);
+
+footerCtasContainer.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('remove-footer-cta-btn')) {
+        const index = target.dataset.ctaIndex;
+        const blockToRemove = document.getElementById(`footer-cta-block-${index}`);
+        if (blockToRemove) {
+            blockToRemove.remove();
+            if (footerCtasContainer.children.length < 3) {
+                addFooterCtaBtn.disabled = false;
+                addFooterCtaBtn.textContent = 'Add Another Link';
+            }
+        }
+    }
+});
+
+// Initialize form with one of each block
+addOffer();
+addFooterCta();
+
+
 // Form submission with design settings
 emailForm.addEventListener('submit', async (e: Event) => {
   e.preventDefault();
@@ -463,7 +755,12 @@ emailForm.addEventListener('submit', async (e: Event) => {
     const ctaText = formData.get('cta') as string;
     const ctaLink = formData.get('cta_link') as string;
     const ctaColor = formData.get('cta_color') as string;
+    const ctaTextColor = formData.get('cta_text_color') as string;
     const mainDisclaimer = formData.get('disclaimer') as string;
+    const heroMessage = formData.get('hero_message') as string;
+    const heroMessageColor = formData.get('hero_message_color') as string;
+    const heroMessageFontSize = formData.get('hero_message_font_size') as string;
+    const heroMessageBgColor = formData.get('hero_message_bg_color') as string;
     const heroPhotoFile = formData.get('photo') as File;
 
     let heroImageDataUrl = '';
@@ -472,67 +769,70 @@ emailForm.addEventListener('submit', async (e: Event) => {
     }
 
     const offersData: OfferData[] = [];
-    for (let i = 1; i <= 5; i++) {
-      const offerBlock = document.getElementById(`offer-block-${i}`);
-      if (!offerBlock || (i > 1 && (offerBlock as HTMLElement).style.display === 'none')) {
-        continue;
-      }
+    for (const offerBlock of document.querySelectorAll<HTMLElement>('#offers-container .offer-block')) {
+        const i = offerBlock.id.split('-')[2];
+        const vehicle = formData.get(`offer_vehicle_${i}`) as string;
+        const title = formData.get(`offer_title_${i}`) as string;
+        const details = formData.get(`offer_details_${i}`) as string;
 
-      const vehicle = formData.get(`offer_vehicle_${i}`) as string;
-      const title = formData.get(`offer_title_${i}`) as string;
-      const details = formData.get(`offer_details_${i}`) as string;
-
-      if (vehicle || title || details) {
-        const offerImageFile = formData.get(`offer_image_${i}`) as File;
-        const imagePosition = formData.get(`offer_image_position_${i}`) as string || 'left';
-        let offerImageDataUrl = '';
-        if (offerImageFile && offerImageFile.size > 0) {
-          offerImageDataUrl = await readFileAsDataURL(offerImageFile);
+        if (vehicle || title || details) {
+            const offerImageFile = formData.get(`offer_image_${i}`) as File;
+            const imagePosition = formData.get(`offer_image_position_${i}`) as string || 'left';
+            let offerImageDataUrl = '';
+            if (offerImageFile && offerImageFile.size > 0) {
+            offerImageDataUrl = await readFileAsDataURL(offerImageFile);
+            }
+            offersData.push({
+            vehicle,
+            title,
+            details,
+            imagePosition,
+            ctaText: formData.get(`offer_cta_text_${i}`) as string,
+            ctaLink: formData.get(`offer_cta_link_${i}`) as string,
+            ctaColor: formData.get(`offer_cta_color_${i}`) as string,
+            ctaTextColor: formData.get(`offer_cta_text_color_${i}`) as string,
+            disclaimer: formData.get(`offer_disclaimer_${i}`) as string,
+            imageDataUrl: offerImageDataUrl,
+            });
         }
-        offersData.push({
-          vehicle,
-          title,
-          details,
-          imagePosition,
-          ctaText: formData.get(`offer_cta_text_${i}`) as string,
-          ctaLink: formData.get(`offer_cta_link_${i}`) as string,
-          ctaColor: formData.get(`offer_cta_color_${i}`) as string,
-          disclaimer: formData.get(`offer_disclaimer_${i}`) as string,
-          imageDataUrl: offerImageDataUrl,
-        });
-      }
     }
 
     const footerCtasData: FooterCta[] = [];
-    for (let i = 1; i <= 3; i++) {
-      const ctaBlock = document.getElementById(`footer-cta-block-${i}`);
-      if (!ctaBlock || (i > 1 && (ctaBlock as HTMLElement).style.display === 'none')) {
-        continue;
-      }
-      const text = formData.get(`footer_cta_text_${i}`) as string;
-      const link = formData.get(`footer_cta_link_${i}`) as string;
-      if (text && link) {
-        footerCtasData.push({ text, link });
-      }
+    for (const ctaBlock of document.querySelectorAll<HTMLElement>('#footer-ctas-container .card')) {
+        const i = ctaBlock.id.split('-')[3];
+        const text = formData.get(`footer_cta_text_${i}`) as string;
+        const link = formData.get(`footer_cta_link_${i}`) as string;
+        if (text && link) {
+            footerCtasData.push({ text, link });
+        }
     }
 
     const footerBackgroundColor = formData.get('footer_bg_color') as string;
+    const footerCtaBgColor = formData.get('footer_cta_bg_color') as string;
     const footerCtaTextColor = formData.get('footer_cta_text_color') as string;
 
     const emailData: EmailData = {
       emailStyle,
       bodyContent,
       bodyBackgroundColor,
+      heroMessage,
+      heroMessageColor,
+      heroMessageFontSize,
+      heroMessageBgColor,
       heroImage: heroImageDataUrl,
       ctaText,
       ctaLink,
       ctaColor,
+      ctaTextColor,
       offers: offersData,
       disclaimer: mainDisclaimer,
       fontFamily: designSettings.fontFamily,
       footerCtas: footerCtasData,
       footerBackgroundColor,
+      footerCtaBgColor,
       footerCtaTextColor,
+      buttonStyle: designSettings.buttonStyle,
+      layoutStyle: designSettings.layoutStyle,
     };
 
     // Simulate generation with design settings
@@ -546,26 +846,20 @@ emailForm.addEventListener('submit', async (e: Event) => {
       spinner.classList.add('hidden');
       
       // Generate email with design settings
-      const schemeColors: Record<string, ColorScheme> = {
-        modern: { primary: '#007aff', bg: '#ffffff', text: '#1d1d1f' },
-        warm: { primary: '#ff6b35', bg: '#fff8f5', text: '#2d1810' },
-        elegant: { primary: '#6366f1', bg: '#fafafa', text: '#1e293b' },
-        nature: { primary: '#10b981', bg: '#f0fdf4', text: '#14532d' },
-        corporate: { primary: '#374151', bg: '#ffffff', text: '#111827' },
-        vibrant: { primary: '#ec4899', bg: '#fdf2f8', text: '#831843' }
-      };
-      
-      const colors = schemeColors[designSettings.colorScheme];
-      const borderRadius = designSettings.buttonStyle === 'pill' ? '25px' : 
-                          designSettings.buttonStyle === 'square' ? '0px' : '8px';
-      
       const emailHtml = generateEmailHtml(emailData);
       
       const codeBlock = document.getElementById('code-block') as HTMLElement;
-      const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
       
       codeBlock.textContent = emailHtml;
-      previewPane.srcdoc = emailHtml;
+      
+      // Set up the onload event to resize the iframe AFTER the content has been loaded
+      previewPane.onload = () => {
+        resizeDesktopPreview();
+        // Clear the onload handler to prevent it from firing again on subsequent loads
+        previewPane.onload = null; 
+      };
+
+      previewPane.srcdoc = emailHtml; // This triggers the load event
       
       console.log('Generated with settings:', designSettings);
     }, 2000);
@@ -585,18 +879,21 @@ emailForm.addEventListener('submit', async (e: Event) => {
 // View toggle functionality
 const desktopBtn = document.getElementById('desktop-view-btn') as HTMLButtonElement;
 const mobileBtn = document.getElementById('mobile-view-btn') as HTMLButtonElement;
-const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
 
 desktopBtn?.addEventListener('click', () => {
   desktopBtn.classList.add('active');
   mobileBtn.classList.remove('active');
   previewPane.className = 'preview-frame desktop';
+  // Call resize function when switching to desktop view
+  resizeDesktopPreview();
 });
 
 mobileBtn?.addEventListener('click', () => {
   mobileBtn.classList.add('active');
   desktopBtn.classList.remove('active');
   previewPane.className = 'preview-frame mobile';
+  // Remove the inline height style so the CSS class can define the height
+  previewPane.style.height = '';
 });
 
 // Copy functionality

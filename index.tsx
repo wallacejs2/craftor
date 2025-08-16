@@ -4,34 +4,81 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-const emailForm = document.getElementById('email-form') as HTMLFormElement;
-const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
-const btnText = document.querySelector('#generate-btn .btn-text') as HTMLElement;
-const spinner = document.querySelector('#generate-btn .spinner') as HTMLElement;
-const outputContainer = document.getElementById(
-  'output-container'
-) as HTMLElement;
-const outputPlaceholder = document.getElementById(
-  'output-placeholder'
-) as HTMLElement;
-const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
-const codeBlock = document.getElementById('code-block') as HTMLElement;
-const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
-const addOfferBtn = document.getElementById('add-offer-btn') as HTMLButtonElement;
-const emailBodyTextarea = document.getElementById('email-body') as HTMLTextAreaElement;
+interface DesignSettings {
+  fontFamily: string;
+  colorScheme: string;
+  layoutStyle: string;
+  buttonStyle: string;
+}
 
-const setLoading = (isLoading: boolean) => {
-  if (isLoading) {
-    generateBtn.disabled = true;
-    btnText.style.display = 'none';
-    spinner.style.display = 'block';
-  } else {
-    generateBtn.disabled = false;
-    btnText.style.display = 'block';
-    spinner.style.display = 'none';
-  }
+interface ColorScheme {
+  primary: string;
+  bg: string;
+  text: string;
+}
+
+interface OfferData {
+  vehicle?: string;
+  title?: string;
+  details?: string;
+  imagePosition?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  ctaColor?: string;
+  disclaimer?: string;
+  imageDataUrl?: string;
+}
+
+interface FooterCta {
+  text: string;
+  link: string;
+}
+
+interface EmailData {
+  emailStyle: string;
+  bodyContent: string;
+  bodyBackgroundColor: string;
+  heroImage: string;
+  ctaText: string;
+  ctaLink: string;
+  ctaColor: string;
+  offers: OfferData[];
+  disclaimer: string;
+  fontFamily: string;
+  footerCtas: FooterCta[];
+  footerBackgroundColor: string;
+  footerCtaTextColor: string;
+}
+
+// Design and visual customization settings
+const designSettings: DesignSettings = {
+  fontFamily: "'Arial', sans-serif",
+  colorScheme: 'modern',
+  layoutStyle: 'centered',
+  buttonStyle: 'rounded'
 };
 
+// DOM Elements
+const emailForm = document.getElementById('email-form') as HTMLFormElement;
+const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+const outputContainer = document.getElementById('output-container') as HTMLElement;
+const outputPlaceholder = document.getElementById('output-placeholder') as HTMLElement;
+
+// Sidebar elements
+const designSidebar = document.getElementById('design-sidebar') as HTMLElement;
+const mergeFieldsSidebar = document.getElementById('merge-fields-sidebar') as HTMLElement;
+const sidebarOverlay = document.getElementById('sidebar-overlay') as HTMLElement;
+
+// Toggle buttons
+const designToggle = document.getElementById('floating-design-btn') as HTMLButtonElement;
+const mergeFieldsToggle = document.getElementById('merge-fields-toggle') as HTMLButtonElement;
+const floatingMergeBtn = document.getElementById('floating-merge-btn') as HTMLButtonElement;
+
+// Close buttons
+const closeDesignSidebar = document.getElementById('close-design-sidebar') as HTMLButtonElement;
+const closeMergeSidebar = document.getElementById('close-sidebar') as HTMLButtonElement;
+
+// Utility functions
 const readFileAsDataURL = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -42,17 +89,17 @@ const readFileAsDataURL = (file: File): Promise<string> => {
 };
 
 const getContrastColor = (hexColor: string): string => {
-  if (!hexColor) return '#333333'; // default dark text
+  if (!hexColor) return '#333333';
   const hex = hexColor.replace('#', '');
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
-  // http://www.w3.org/TR/AERT#color-contrast
   const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
   return (brightness > 125) ? '#333333' : '#ffffff';
 };
 
-const generateEmailHtml = (data: any) => {
+// Email HTML generation
+const generateEmailHtml = (data: EmailData): string => {
   const {
     bodyContent,
     heroImage,
@@ -67,6 +114,7 @@ const generateEmailHtml = (data: any) => {
     footerBackgroundColor,
     footerCtaTextColor,
   } = data;
+
   const mainButtonColor = ctaColor || '#4f46e5';
   const mainBodyBg = bodyBackgroundColor || '#ffffff';
   const mainBodyTextColor = getContrastColor(mainBodyBg);
@@ -76,17 +124,16 @@ const generateEmailHtml = (data: any) => {
   const footerButtonBg = footerBg;
   const footerButtonText = footerCtaTextColor || '#4f46e5';
 
-  const renderOffer = (offer: any) => {
+  const renderOffer = (offer: OfferData): string => {
     if (!offer.title && !offer.vehicle && !offer.details) return '';
     
     const offerButtonColor = offer.ctaColor || '#4f46e5';
     const imagePosition = offer.imagePosition || 'left';
     
-    // Generate content sections
     const textContent = `
       <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
       <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
-      <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
+      <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details?.replace(/\n/g, '<br />') || ''}</p>
       ${ offer.ctaText && offer.ctaLink ? `
         <div><!--[if mso]>
           <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
@@ -100,7 +147,6 @@ const generateEmailHtml = (data: any) => {
     `;
 
     if (!offer.imageDataUrl) {
-      // No image, just show text content
       return `
         <tr>
           <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
@@ -112,7 +158,6 @@ const generateEmailHtml = (data: any) => {
         <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
     }
 
-    // Handle different image positions
     if (imagePosition === 'top') {
       return `
         <tr>
@@ -150,7 +195,6 @@ const generateEmailHtml = (data: any) => {
         </tr>
         <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
     } else {
-      // Default: left position
       return `
         <tr>
           <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
@@ -305,16 +349,114 @@ const generateEmailHtml = (data: any) => {
   </html>`;
 };
 
-const handleFormSubmit = async (e: Event) => {
-  e.preventDefault();
-  setLoading(true);
-  outputPlaceholder.style.display = 'flex';
-  outputContainer.style.display = 'none';
-  outputPlaceholder.innerHTML = `<p>Generating your email...</p>`;
+// Sidebar functionality
+const openDesignSidebar = (): void => {
+  designSidebar.classList.add('open');
+  mergeFieldsSidebar.classList.remove('open');
+  sidebarOverlay.classList.add('visible');
+  document.body.style.overflow = 'hidden';
+};
 
+const closeSidebarFunc = (): void => {
+  designSidebar.classList.remove('open');
+  mergeFieldsSidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('visible');
+  document.body.style.overflow = '';
+};
+
+const openMergeSidebar = (): void => {
+  mergeFieldsSidebar.classList.add('open');
+  designSidebar.classList.remove('open');
+  sidebarOverlay.classList.add('visible');
+  document.body.style.overflow = 'hidden';
+};
+
+// Event listeners for sidebar toggles
+designToggle.addEventListener('click', openDesignSidebar);
+mergeFieldsToggle.addEventListener('click', openMergeSidebar);
+floatingMergeBtn.addEventListener('click', openMergeSidebar);
+closeDesignSidebar.addEventListener('click', closeSidebarFunc);
+closeMergeSidebar.addEventListener('click', closeSidebarFunc);
+sidebarOverlay.addEventListener('click', closeSidebarFunc);
+
+// Design option handlers
+const fontSelect = document.getElementById('design-font-family') as HTMLSelectElement;
+fontSelect?.addEventListener('change', (e) => {
+  const target = e.target as HTMLSelectElement;
+  designSettings.fontFamily = target.value;
+  console.log('Font updated:', designSettings.fontFamily);
+});
+
+// Color scheme selection
+document.querySelectorAll('.color-scheme-option').forEach(option => {
+  option.addEventListener('click', () => {
+    document.querySelectorAll('.color-scheme-option').forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+    const dataset = (option as HTMLElement).dataset;
+    designSettings.colorScheme = dataset.scheme || 'modern';
+    console.log('Color scheme updated:', designSettings.colorScheme);
+  });
+});
+
+// Layout style selection
+document.querySelectorAll('.layout-option').forEach(option => {
+  option.addEventListener('click', () => {
+    document.querySelectorAll('.layout-option').forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+    const dataset = (option as HTMLElement).dataset;
+    designSettings.layoutStyle = dataset.layout || 'centered';
+    console.log('Layout updated:', designSettings.layoutStyle);
+  });
+});
+
+// Button style selection
+document.querySelectorAll('.button-style-option').forEach(option => {
+  option.addEventListener('click', () => {
+    document.querySelectorAll('.button-style-option').forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+    const dataset = (option as HTMLElement).dataset;
+    designSettings.buttonStyle = dataset.button || 'rounded';
+    console.log('Button style updated:', designSettings.buttonStyle);
+  });
+});
+
+// Accordion functionality
+document.querySelectorAll('.accordion-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const content = header.nextElementSibling as HTMLElement;
+    const icon = header.querySelector('span') as HTMLElement;
+    const isOpen = content.classList.contains('open');
+
+    // Close all other accordions
+    document.querySelectorAll('.accordion-content').forEach(c => {
+      c.classList.remove('open');
+    });
+    document.querySelectorAll('.accordion-header span').forEach(i => {
+      (i as HTMLElement).style.transform = 'rotate(0deg)';
+    });
+
+    // Toggle current accordion
+    if (!isOpen) {
+      content.classList.add('open');
+      icon.style.transform = 'rotate(180deg)';
+    }
+  });
+});
+
+// Form submission with design settings
+emailForm.addEventListener('submit', async (e: Event) => {
+  e.preventDefault();
+  
+  // Show loading state
+  const btnText = generateBtn.querySelector('.btn-text') as HTMLElement;
+  const spinner = generateBtn.querySelector('.spinner') as HTMLElement;
+  
+  generateBtn.disabled = true;
+  btnText.style.display = 'none';
+  spinner.classList.remove('hidden');
+  
   try {
     const formData = new FormData(emailForm);
-    const fontFamily = formData.get('font-family') as string;
     const emailStyle = formData.get('email-style') as string || 'modern';
     const bodyContent = formData.get('email-body') as string;
     const bodyBackgroundColor = formData.get('body_bg_color') as string;
@@ -329,10 +471,10 @@ const handleFormSubmit = async (e: Event) => {
       heroImageDataUrl = await readFileAsDataURL(heroPhotoFile);
     }
 
-    const offersData = [];
+    const offersData: OfferData[] = [];
     for (let i = 1; i <= 5; i++) {
       const offerBlock = document.getElementById(`offer-block-${i}`);
-      if (!offerBlock || (i > 1 && offerBlock.style.display === 'none')) {
+      if (!offerBlock || (i > 1 && (offerBlock as HTMLElement).style.display === 'none')) {
         continue;
       }
 
@@ -361,23 +503,23 @@ const handleFormSubmit = async (e: Event) => {
       }
     }
 
-    const footerCtasData = [];
+    const footerCtasData: FooterCta[] = [];
     for (let i = 1; i <= 3; i++) {
       const ctaBlock = document.getElementById(`footer-cta-block-${i}`);
-       if (!ctaBlock || (i > 1 && ctaBlock.style.display === 'none')) {
+      if (!ctaBlock || (i > 1 && (ctaBlock as HTMLElement).style.display === 'none')) {
         continue;
       }
       const text = formData.get(`footer_cta_text_${i}`) as string;
       const link = formData.get(`footer_cta_link_${i}`) as string;
       if (text && link) {
-          footerCtasData.push({ text, link });
+        footerCtasData.push({ text, link });
       }
     }
 
     const footerBackgroundColor = formData.get('footer_bg_color') as string;
     const footerCtaTextColor = formData.get('footer_cta_text_color') as string;
 
-    const emailData = {
+    const emailData: EmailData = {
       emailStyle,
       bodyContent,
       bodyBackgroundColor,
@@ -387,19 +529,46 @@ const handleFormSubmit = async (e: Event) => {
       ctaColor,
       offers: offersData,
       disclaimer: mainDisclaimer,
-      fontFamily,
+      fontFamily: designSettings.fontFamily,
       footerCtas: footerCtasData,
       footerBackgroundColor,
       footerCtaTextColor,
     };
 
-    const emailHtml = generateEmailHtml(emailData);
-
-    previewPane.srcdoc = emailHtml;
-    codeBlock.textContent = emailHtml;
-    
-    outputPlaceholder.style.display = 'none';
-    outputContainer.style.display = 'grid';
+    // Simulate generation with design settings
+    setTimeout(() => {
+      outputPlaceholder.style.display = 'none';
+      outputContainer.style.display = 'grid';
+      
+      // Reset button
+      generateBtn.disabled = false;
+      btnText.style.display = 'block';
+      spinner.classList.add('hidden');
+      
+      // Generate email with design settings
+      const schemeColors: Record<string, ColorScheme> = {
+        modern: { primary: '#007aff', bg: '#ffffff', text: '#1d1d1f' },
+        warm: { primary: '#ff6b35', bg: '#fff8f5', text: '#2d1810' },
+        elegant: { primary: '#6366f1', bg: '#fafafa', text: '#1e293b' },
+        nature: { primary: '#10b981', bg: '#f0fdf4', text: '#14532d' },
+        corporate: { primary: '#374151', bg: '#ffffff', text: '#111827' },
+        vibrant: { primary: '#ec4899', bg: '#fdf2f8', text: '#831843' }
+      };
+      
+      const colors = schemeColors[designSettings.colorScheme];
+      const borderRadius = designSettings.buttonStyle === 'pill' ? '25px' : 
+                          designSettings.buttonStyle === 'square' ? '0px' : '8px';
+      
+      const emailHtml = generateEmailHtml(emailData);
+      
+      const codeBlock = document.getElementById('code-block') as HTMLElement;
+      const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
+      
+      codeBlock.textContent = emailHtml;
+      previewPane.srcdoc = emailHtml;
+      
+      console.log('Generated with settings:', designSettings);
+    }, 2000);
 
   } catch (error) {
     console.error(error);
@@ -407,26 +576,52 @@ const handleFormSubmit = async (e: Event) => {
     outputPlaceholder.style.display = 'flex';
     outputContainer.style.display = 'none';
   } finally {
-    setLoading(false);
+    generateBtn.disabled = false;
+    btnText.style.display = 'block';
+    spinner.classList.add('hidden');
   }
-};
+});
 
-const handleCopyClick = async () => {
-  if (!codeBlock.textContent) return;
+// View toggle functionality
+const desktopBtn = document.getElementById('desktop-view-btn') as HTMLButtonElement;
+const mobileBtn = document.getElementById('mobile-view-btn') as HTMLButtonElement;
+const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
+
+desktopBtn?.addEventListener('click', () => {
+  desktopBtn.classList.add('active');
+  mobileBtn.classList.remove('active');
+  previewPane.className = 'preview-frame desktop';
+});
+
+mobileBtn?.addEventListener('click', () => {
+  mobileBtn.classList.add('active');
+  desktopBtn.classList.remove('active');
+  previewPane.className = 'preview-frame mobile';
+});
+
+// Copy functionality
+const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+copyBtn?.addEventListener('click', async () => {
+  const codeBlock = document.getElementById('code-block') as HTMLElement;
+  
   try {
-    await navigator.clipboard.writeText(codeBlock.textContent);
+    await navigator.clipboard.writeText(codeBlock.textContent || '');
+    const originalText = copyBtn.textContent;
     copyBtn.textContent = 'Copied!';
     setTimeout(() => {
-      copyBtn.textContent = 'Copy HTML';
+      copyBtn.textContent = originalText;
     }, 2000);
   } catch (err) {
-    console.error('Failed to copy text: ', err);
-    alert('Failed to copy HTML. Please try again.');
+    console.error('Failed to copy:', err);
   }
-};
+});
 
-const handleDownloadClick = () => {
+// Download functionality
+const downloadBtn = document.getElementById('download-btn') as HTMLButtonElement;
+downloadBtn?.addEventListener('click', () => {
+  const codeBlock = document.getElementById('code-block') as HTMLElement;
   if (!codeBlock.textContent) return;
+  
   try {
     const blob = new Blob([codeBlock.textContent], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
@@ -438,277 +633,39 @@ const handleDownloadClick = () => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   } catch (err) {
-    console.error('Failed to download HTML: ', err);
-    alert('Failed to download HTML. Please try again.');
+    console.error('Failed to download HTML:', err);
   }
-};
+});
 
-const setupOfferManagement = () => {
-    const updateAddButtonVisibility = () => {
-        const offer2 = document.getElementById('offer-block-2') as HTMLElement;
-        const offer3 = document.getElementById('offer-block-3') as HTMLElement;
-        const offer4 = document.getElementById('offer-block-4') as HTMLElement;
-        const offer5 = document.getElementById('offer-block-5') as HTMLElement;
-        if (offer2.style.display !== 'none' && offer3.style.display !== 'none' && offer4.style.display !== 'none' && offer5.style.display !== 'none') {
-            addOfferBtn.style.display = 'none';
-        } else {
-            addOfferBtn.style.display = 'block';
-        }
-    };
+// Merge field insertion
+let lastFocusedInput: HTMLInputElement | HTMLTextAreaElement | null = null;
 
-    addOfferBtn.addEventListener('click', () => {
-        const offer2 = document.getElementById('offer-block-2') as HTMLElement;
-        const offer3 = document.getElementById('offer-block-3') as HTMLElement;
-        const offer4 = document.getElementById('offer-block-4') as HTMLElement;
-        const offer5 = document.getElementById('offer-block-5') as HTMLElement;
+document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[type="text"], textarea').forEach(input => {
+  input.addEventListener('focus', () => {
+    lastFocusedInput = input;
+  });
+});
 
-        if (offer2.style.display === 'none') {
-            offer2.style.display = 'block';
-        } else if (offer3.style.display === 'none') {
-            offer3.style.display = 'block';
-        } else if (offer4.style.display === 'none') {
-            offer4.style.display = 'block';
-        } else if (offer5.style.display === 'none') {
-            offer5.style.display = 'block';
-        }
-        updateAddButtonVisibility();
-    });
-
-    document.querySelectorAll('.remove-offer-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const target = e.currentTarget as HTMLButtonElement;
-            const offerNum = target.dataset.offerNum;
-            const offerBlock = document.getElementById(`offer-block-${offerNum}`) as HTMLElement;
-            offerBlock.style.display = 'none';
-            offerBlock.querySelectorAll('input, textarea, select').forEach((input: any) => {
-                 if (input.type === 'file') {
-                   input.value = '';
-                 } else if (input.tagName === 'SELECT') {
-                   input.selectedIndex = 0;
-                 } else {
-                   input.value = '';
-                 }
-            });
-            const previewImg = document.getElementById(`offer_image_preview_${offerNum}`) as HTMLImageElement;
-            if (previewImg) {
-                previewImg.src = 'https://placehold.co/200x200/f1f3f5/6c757d?text=Image';
-            }
-            updateAddButtonVisibility();
-        });
-    });
-
-    document.querySelectorAll('.offer-image-input').forEach(input => {
-       input.addEventListener('change', (e) => {
-           const target = e.target as HTMLInputElement;
-           const file = target.files?.[0];
-           if (file) {
-               const offerNum = target.id.split('_')[2];
-               const previewImg = document.getElementById(`offer_image_preview_${offerNum}`) as HTMLImageElement;
-               if (previewImg) {
-                   const reader = new FileReader();
-                   reader.onload = (event) => {
-                       previewImg.src = event.target?.result as string;
-                   };
-                   reader.readAsDataURL(file);
-               }
-           }
-       });
-    });
-};
-
-const setupMergeFieldInserter = () => {
-    let lastFocusedInput: HTMLInputElement | HTMLTextAreaElement | null = null;
-    const mergeFieldItems = document.querySelectorAll('.sidebar-content .merge-field-item');
-    const targetInputs = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input[type="text"], textarea');
-
-    targetInputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            lastFocusedInput = input;
-        });
-    });
-
-    mergeFieldItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const valueToInsert = (item as HTMLElement).dataset.value;
-            if (valueToInsert && lastFocusedInput) {
-                // Ensure the focused element is still in the DOM
-                if (!document.body.contains(lastFocusedInput)) {
-                    lastFocusedInput = null;
-                    return;
-                }
-                
-                const startPos = lastFocusedInput.selectionStart ?? 0;
-                const endPos = lastFocusedInput.selectionEnd ?? 0;
-                const text = lastFocusedInput.value;
-                
-                lastFocusedInput.value = text.substring(0, startPos) + valueToInsert + text.substring(endPos, text.length);
-                
-                const newCursorPos = startPos + valueToInsert.length;
-                lastFocusedInput.focus();
-                lastFocusedInput.setSelectionRange(newCursorPos, newCursorPos);
-                
-                // Close sidebar after insertion
-                const sidebar = document.getElementById('merge-fields-sidebar');
-                const overlay = document.getElementById('sidebar-overlay');
-                if (sidebar && overlay) {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('visible');
-                    document.body.style.overflow = '';
-                }
-            }
-        });
-    });
-};
-
-const setupMergeFieldCategories = () => {
-    document.querySelectorAll('.sidebar-content .category-toggle').forEach(button => {
-        button.addEventListener('click', () => {
-            const currentlyActive = button.classList.contains('active');
-            
-            // Deactivate all toggles first
-            document.querySelectorAll('.sidebar-content .category-toggle').forEach(b => {
-                b.classList.remove('active');
-                const content = b.nextElementSibling as HTMLElement;
-                if (content) {
-                    content.style.maxHeight = '';
-                }
-            });
-
-            // If the clicked button was not already active, activate it.
-            if (!currentlyActive) {
-                button.classList.add('active');
-                const content = button.nextElementSibling as HTMLElement;
-                if (content) {
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                }
-            }
-        });
-    });
-};
-
-const setupFooterCtaManagement = () => {
-    const addBtn = document.getElementById('add-footer-cta-btn') as HTMLButtonElement;
-    if (!addBtn) return;
-
-    const MAX_CTAS = 3;
-
-    const getVisibleCount = () => {
-        let count = 0;
-        for (let i = 1; i <= MAX_CTAS; i++) {
-            const block = document.getElementById(`footer-cta-block-${i}`);
-            if (block && (i === 1 || block.style.display !== 'none')) {
-                count++;
-            }
-        }
-        return count;
+document.querySelectorAll('.merge-field-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const value = (item as HTMLElement).dataset.value;
+    if (value && lastFocusedInput) {
+      const start = lastFocusedInput.selectionStart || 0;
+      const end = lastFocusedInput.selectionEnd || 0;
+      const text = lastFocusedInput.value;
+      
+      lastFocusedInput.value = text.substring(0, start) + value + text.substring(end);
+      lastFocusedInput.focus();
+      lastFocusedInput.setSelectionRange(start + value.length, start + value.length);
+      
+      closeSidebarFunc();
     }
+  });
+});
 
-    const updateAddButtonVisibility = () => {
-        const visibleCount = getVisibleCount();
-        if (visibleCount >= MAX_CTAS) {
-            addBtn.style.display = 'none';
-        } else {
-            addBtn.style.display = 'block';
-        }
-    };
-
-    addBtn.addEventListener('click', () => {
-        for (let i = 2; i <= MAX_CTAS; i++) {
-            const block = document.getElementById(`footer-cta-block-${i}`);
-            if (block && block.style.display === 'none') {
-                block.style.display = 'block';
-                break;
-            }
-        }
-        updateAddButtonVisibility();
-    });
-
-    document.querySelectorAll('.remove-footer-cta-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const target = e.currentTarget as HTMLButtonElement;
-            const ctaNum = target.dataset.ctaNum;
-            const ctaBlock = document.getElementById(`footer-cta-block-${ctaNum}`) as HTMLElement;
-            if (ctaBlock) {
-                ctaBlock.style.display = 'none';
-                ctaBlock.querySelectorAll('input').forEach((input: HTMLInputElement) => {
-                    input.value = '';
-                });
-            }
-            updateAddButtonVisibility();
-        });
-    });
-
-    updateAddButtonVisibility();
-};
-
-const setupPreviewToggle = () => {
-    const desktopBtn = document.getElementById('desktop-view-btn') as HTMLButtonElement;
-    const mobileBtn = document.getElementById('mobile-view-btn') as HTMLButtonElement;
-    const previewPane = document.getElementById('preview-pane') as HTMLIFrameElement;
-
-    if (!desktopBtn || !mobileBtn || !previewPane) return;
-
-    const switchView = (view: string) => {
-        // Update button states
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        if (view === 'mobile') {
-            mobileBtn.classList.add('active');
-            previewPane.className = 'mobile-preview';
-        } else {
-            desktopBtn.classList.add('active');
-            previewPane.className = 'desktop-preview';
-        }
-    };
-
-    desktopBtn.addEventListener('click', () => switchView('desktop'));
-    mobileBtn.addEventListener('click', () => switchView('mobile'));
-};
-
-const setupMergeFieldsSidebar = () => {
-    const toggleBtn = document.getElementById('merge-fields-toggle') as HTMLButtonElement;
-    const floatingBtn = document.getElementById('floating-merge-btn') as HTMLButtonElement;
-    const closeBtn = document.getElementById('close-sidebar') as HTMLButtonElement;
-    const sidebar = document.getElementById('merge-fields-sidebar') as HTMLElement;
-    const overlay = document.getElementById('sidebar-overlay') as HTMLElement;
-
-    if (!toggleBtn || !floatingBtn || !closeBtn || !sidebar || !overlay) return;
-
-    const openSidebar = () => {
-        sidebar.classList.add('open');
-        overlay.classList.add('visible');
-        document.body.style.overflow = 'hidden';
-    };
-
-    const closeSidebar = () => {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('visible');
-        document.body.style.overflow = '';
-    };
-
-    toggleBtn.addEventListener('click', openSidebar);
-    floatingBtn.addEventListener('click', openSidebar);
-    closeBtn.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
-
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('open')) {
-            closeSidebar();
-        }
-    });
-};
-
-emailForm.addEventListener('submit', handleFormSubmit);
-copyBtn.addEventListener('click', handleCopyClick);
-document.getElementById('download-btn')!.addEventListener('click', handleDownloadClick);
-document.addEventListener('DOMContentLoaded', () => {
-    setupOfferManagement();
-    setupMergeFieldInserter();
-    setupMergeFieldCategories();
-    setupFooterCtaManagement();
-    setupPreviewToggle();
-    setupMergeFieldsSidebar();
+// Close sidebars on escape key
+document.addEventListener('keydown', (e: KeyboardEvent) => {
+  if (e.key === 'Escape') {
+    closeSidebarFunc();
+  }
 });

@@ -6,1954 +6,512 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/genai": "https://esm.sh/@google/genai@^0.12.0"
-        }
-      }
-    </script>
-    <style>
-:root {
-  --background-color: #fbfbfd;
-  --text-color: #1d1d1f;
-  --text-secondary: #6e6e73;
-  --primary-color: #007aff;
-  --primary-hover-color: #0056cc;
-  --card-background: #ffffff;
-  --border-color: #d2d2d7;
-  --input-background: #ffffff;
-  --input-border: #d2d2d7;
-  --input-border-focus: #007aff;
-  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-  --box-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --box-shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.04);
-  --box-shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.08);
-  --border-radius: 12px;
-  --border-radius-small: 8px;
-  --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-family);
-  background-color: var(--background-color);
-  color: var(--text-color);
-  margin: 0;
-  padding: 0;
-  line-height: 1.47059;
-  font-size: 17px;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 22px 100px 22px;
-}
-
-header {
-  text-align: center;
-  margin-bottom: 64px;
-}
-
-header h1 {
-  font-size: 56px;
-  font-weight: 600;
-  color: var(--text-color);
-  margin: 0 0 16px 0;
-  letter-spacing: -0.005em;
-  line-height: 1.07143;
-}
-
-header p {
-  font-size: 21px;
-  color: var(--text-secondary);
-  max-width: 640px;
-  margin: 0 auto;
-  font-weight: 400;
-  line-height: 1.381;
-}
-
-.controls {
-  background: var(--card-background);
-  padding: 48px 40px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow-medium);
-  border: 1px solid var(--border-color);
-  margin-bottom: 40px;
-}
-
-.controls h2 {
-  font-size: 28px;
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-color);
-  letter-spacing: -0.003em;
-}
-
-.form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.merge-fields-btn {
-  padding: 8px 16px;
-  background-color: #f5f5f7;
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-small);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  width: auto;
-}
-
-.merge-fields-btn:hover {
-  background-color: #e8e8ed;
-  border-color: #c7c7cc;
-}
-
-.form-group {
-  margin-bottom: 24px;
-}
-
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 8px;
-  font-size: 15px;
-  color: var(--text-color);
-  letter-spacing: -0.002em;
-}
-
-input[type='text'],
-select,
-textarea,
-input[type='file'],
-input[type='color'] {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: var(--border-radius-small);
-  border: 1px solid var(--input-border);
-  background-color: var(--input-background);
-  font-family: inherit;
-  font-size: 17px;
-  font-weight: 400;
-  transition: var(--transition);
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-input[type='color'] {
-  padding: 8px;
-  height: 44px;
-  cursor: pointer;
-  border-radius: var(--border-radius-small);
-}
-
-input[type='text']:focus,
-select:focus,
-textarea:focus,
-input[type='file']:focus,
-input[type='color']:focus {
-  border-color: var(--input-border-focus);
-  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
-}
-
-input[type='file'] {
-  padding: 12px 16px;
-  cursor: pointer;
-}
-
-input[type='file']::file-selector-button {
-  font-weight: 600;
-  cursor: pointer;
-  background-color: var(--input-background);
-  color: var(--primary-color);
-  border: 1px solid var(--border-color);
-  padding: 8px 16px;
-  border-radius: 6px;
-  margin-right: 12px;
-  transition: var(--transition);
-  font-family: inherit;
-  font-size: 15px;
-}
-
-input[type='file']::file-selector-button:hover {
-  background-color: #f5f5f7;
-  border-color: var(--primary-color);
-}
-
-textarea {
-  resize: vertical;
-  min-height: 120px;
-  line-height: 1.47059;
-}
-
-select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236e6e73' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right 12px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  padding-right: 40px;
-}
-
-input[type='text']::placeholder,
-textarea::placeholder {
-  color: #86868b;
-}
-
-button {
-  width: 100%;
-  padding: 16px 24px;
-  background-color: var(--primary-color);
-  color: #ffffff;
-  border: none;
-  border-radius: var(--border-radius-small);
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-family: inherit;
-  letter-spacing: -0.002em;
-}
-
-button:hover {
-  background-color: var(--primary-hover-color);
-  transform: translateY(-1px);
-  box-shadow: var(--box-shadow-light);
-}
-
-button:active {
-  transform: translateY(0);
-}
-
-button:disabled {
-  background-color: #86868b;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.secondary-btn {
-  background-color: #f5f5f7;
-  color: var(--text-color);
-  font-weight: 600;
-  border: 1px solid var(--border-color);
-}
-
-.secondary-btn:hover {
-  background-color: #e8e8ed;
-  border-color: #c7c7cc;
-}
-
-.output {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  height: 100%;
-  margin-top: 20px;
-  min-height: 600px;
-}
-
-.output-placeholder {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--card-background);
-  border: 2px dashed var(--border-color);
-  border-radius: var(--border-radius);
-  height: 50vh;
-  color: var(--text-secondary);
-  font-size: 19px;
-  font-weight: 400;
-}
-
-.output-panel {
-  background: var(--card-background);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow-medium);
-  border: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-color);
-  background-color: #fafafa;
-}
-
-.panel-header h2 {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-color);
-}
-
-.view-toggle {
-  display: flex;
-  background-color: #f5f5f7;
-  border-radius: 6px;
-  padding: 2px;
-}
-
-.view-btn {
-  padding: 6px 12px;
-  font-size: 14px;
-  font-weight: 500;
-  border: none;
-  border-radius: 4px;
-  background-color: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition);
-  min-width: 70px;
-}
-
-.view-btn.active {
-  background-color: #ffffff;
-  color: var(--text-color);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.view-btn:hover:not(.active) {
-  color: var(--text-color);
-}
-
-.code-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn {
-  padding: 8px 16px;
-  font-size: 15px;
-  font-weight: 600;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-small);
-  background-color: #f5f5f7;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: var(--transition);
-  min-width: 100px;
-  width: auto;
-}
-
-.action-btn:hover {
-  background-color: #e8e8ed;
-  border-color: #c7c7cc;
-}
-
-.action-btn.primary {
-  background-color: var(--primary-color);
-  color: #ffffff;
-  border-color: var(--primary-color);
-}
-
-.action-btn.primary:hover {
-  background-color: var(--primary-hover-color);
-  border-color: var(--primary-hover-color);
-}
-
-.preview-container,
-.code-container {
-  flex-grow: 1;
-  overflow: auto;
-}
-
-/* Updated code container styles for better code viewing */
-.code-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.code-wrapper {
-  position: relative;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.code-content {
-  height: 100%;
-  max-height: 350px;
-  overflow-y: auto;
-  transition: max-height 0.3s ease;
-  border: none;
-  background-color: #fafafa;
-}
-
-.code-content.expanded {
-  max-height: 70vh;
-}
-
-.code-expand-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 12px;
-  background-color: #f5f5f7;
-  border-top: 1px solid var(--border-color);
-}
-
-.expand-btn {
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-small);
-  background-color: #ffffff;
-  color: var(--text-color);
-  cursor: pointer;
-  transition: var(--transition);
-  width: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.expand-btn:hover {
-  background-color: #f5f5f7;
-  border-color: var(--primary-color);
-}
-
-.expand-icon {
-  transition: transform 0.3s ease;
-  font-size: 12px;
-}
-
-.expand-btn.expanded .expand-icon {
-  transform: rotate(180deg);
-}
-
-.code-scroll-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  background: linear-gradient(transparent, rgba(245, 245, 247, 0.9));
-  pointer-events: none;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.code-scroll-indicator.hidden {
-  opacity: 0;
-}
-
-.preview-wrapper {
-  width: 100%;
-  height: 70vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20px;
-  background-color: #f5f5f7;
-}
-
-#preview-pane {
-  border: none;
-  border-radius: 8px;
-  box-shadow: var(--box-shadow-medium);
-  transition: var(--transition);
-  background-color: #ffffff;
-}
-
-#preview-pane.desktop-preview {
-  width: 100%;
-  height: 100%;
-  max-width: 800px;
-}
-
-#preview-pane.mobile-preview {
-  width: 375px;
-  height: 600px;
-  max-height: 80%;
-}
-
-pre {
-  margin: 0;
-  height: 100%;
-}
-
-#code-block {
-  display: block;
-  padding: 24px;
-  font-family: var(--font-family-mono);
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text-color);
-  background-color: transparent;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  margin: 0;
-  border: none;
-  outline: none;
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: #ffffff;
-  animation: spin 1s ease-in-out infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Merge Fields Sidebar */
-.merge-fields-sidebar {
-  position: fixed;
-  top: 0;
-  right: -500px;
-  width: 500px;
-  height: 100vh;
-  background-color: var(--card-background);
-  border-left: 1px solid var(--border-color);
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  display: flex;
-  flex-direction: column;
-}
-
-.merge-fields-sidebar.open {
-  right: 0;
-}
-
-.sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.sidebar-overlay.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px 24px 16px 24px;
-  border-bottom: 1px solid var(--border-color);
-  background-color: #fafafa;
-}
-
-.sidebar-header h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-  color: var(--text-color);
-}
-
-.close-sidebar-btn {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: #f5f5f7;
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  font-size: 20px;
-  line-height: 1;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-}
-
-.close-sidebar-btn:hover {
-  background: #e8e8ed;
-  border-color: #c7c7cc;
-  color: var(--text-color);
-}
-
-.sidebar-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
-}
-
-.sidebar-content .merge-fields-list {
-  max-height: none;
-  overflow-y: visible;
-  padding-right: 0;
-}
-
-.sidebar-content .merge-field-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  border-radius: var(--border-radius-small);
-  background-color: var(--card-background);
-  margin-bottom: 2px;
-  cursor: pointer;
-  transition: var(--transition);
-  border: 1px solid transparent;
-}
-
-.sidebar-content .merge-field-item:hover {
-  background-color: #f5f5f7;
-  border-color: var(--primary-color);
-  transform: translateY(-1px);
-  box-shadow: var(--box-shadow-light);
-}
-
-.sidebar-content .merge-field-item span {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--text-color);
-}
-
-.sidebar-content .merge-field-item code {
-  font-family: var(--font-family-mono);
-  font-size: 13px;
-  color: var(--primary-color);
-  background-color: rgba(0, 122, 255, 0.08);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-/* Category Dropdown Styles in Sidebar */
-.sidebar-content .category-toggle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 16px 20px;
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius-small);
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: left;
-  font-family: inherit;
-  margin-bottom: 2px;
-  position: relative;
-  z-index: 2;
-  color: var(--text-color);
-  transition: var(--transition);
-}
-
-.sidebar-content .merge-field-group {
-  margin-bottom: 8px;
-}
-
-.sidebar-content .merge-field-group:last-child {
-  margin-bottom: 0;
-}
-
-.sidebar-content .category-toggle:hover {
-  background-color: #f5f5f7;
-  border-color: var(--primary-color);
-}
-
-.sidebar-content .toggle-icon {
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  width: 12px;
-  height: 12px;
-  border: solid var(--text-secondary);
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  transform: rotate(45deg);
-  margin-left: 8px;
-}
-
-.sidebar-content .category-toggle.active .toggle-icon {
-  transform: rotate(-135deg);
-}
-
-.sidebar-content .category-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-top: none;
-  border-radius: 0 0 var(--border-radius-small) var(--border-radius-small);
-  padding: 0;
-  position: relative;
-  z-index: 1;
-}
-
-.sidebar-content .category-toggle.active {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-color: var(--primary-color);
-  background-color: #f5f5f7;
-}
-
-.sidebar-content .category-toggle.active + .category-content {
-  border-color: var(--primary-color);
-  border-top-color: var(--border-color);
-}
-
-.sidebar-content .category-content .merge-field-item {
-  border: none;
-  border-bottom: 1px solid #f5f5f7;
-  border-radius: 0;
-  margin: 0;
-}
-
-.sidebar-content .category-content .merge-field-item:last-child {
-  border-bottom: none;
-}
-
-.sidebar-content .category-content .merge-field-item:hover {
-  background-color: rgba(0, 122, 255, 0.04);
-  box-shadow: none;
-  transform: none;
-  border-color: transparent;
-}
-
-/* Floating Merge Fields Button */
-.floating-merge-btn {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  background-color: var(--primary-color);
-  color: #ffffff;
-  border: none;
-  border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
-  cursor: pointer;
-  z-index: 998;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  font-weight: 600;
-  transition: var(--transition);
-  backdrop-filter: blur(10px);
-}
-
-.floating-merge-btn:hover {
-  background-color: var(--primary-hover-color);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
-}
-
-.floating-merge-btn:active {
-  transform: translateY(0);
-}
-
-.floating-merge-btn .btn-icon {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.floating-merge-btn .btn-icon::before {
-  content: '{{}}';
-  font-family: var(--font-family-mono);
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 1;
-}
-
-/* Offers Section */
-.offers-section {
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid var(--border-color);
-  margin-bottom: 32px;
-}
-
-.offers-section h2 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  padding-bottom: 0;
-  border-bottom: none;
-  color: var(--text-color);
-}
-
-.offer-block {
-  border: 1px solid var(--border-color);
-  padding: 24px;
-  border-radius: var(--border-radius);
-  margin-bottom: 20px;
-  background-color: var(--card-background);
-  box-shadow: var(--box-shadow-light);
-}
-
-.offer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f5f5f7;
-}
-
-.offer-header h3 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.remove-offer-btn,
-.remove-footer-cta-btn {
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  min-width: 32px;
-  background: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #fecaca;
-  font-size: 18px;
-  line-height: 1;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: var(--transition);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.remove-offer-btn:hover,
-.remove-footer-cta-btn:hover {
-  background: #fecaca;
-  border-color: #f87171;
-  color: #b91c1c;
-}
-
-.offer-body {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 24px;
-  align-items: flex-start;
-}
-
-.img-upload-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.img-upload-wrapper label {
-  text-align: center;
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.offer-image-preview {
-  width: 240px;
-  height: 240px;
-  border-radius: var(--border-radius);
-  object-fit: cover;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--box-shadow-light);
-}
-
-.offer-image-input {
-  font-size: 14px;
-  padding: 8px 12px;
-}
-
-.offer-image-input::file-selector-button {
-  padding: 6px 12px;
-  font-size: 14px;
-  margin-right: 8px;
-}
-
-.offer-details-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form-group-grid {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group-grid.two-col,
-.form-group-grid.three-col {
-  display: grid;
-  gap: 16px;
-}
-
-.form-group-grid.two-col {
-  grid-template-columns: 1fr 1fr;
-}
-
-.form-group-grid.three-col {
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: end;
-}
-
-.form-group-grid label,
-.form-group-grid input,
-.form-group-grid textarea {
-  margin: 0;
-  width: 100%;
-}
-
-.form-group-grid label {
-  margin-bottom: 6px;
-}
-
-/* Footer CTAs Section */
-.footer-ctas-section {
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid var(--border-color);
-  margin-bottom: 32px;
-}
-
-.footer-ctas-section h2 {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  padding-bottom: 0;
-  border-bottom: none;
-  color: var(--text-color);
-}
-
-.footer-ctas-section p {
-  font-size: 17px;
-  color: var(--text-secondary);
-  margin-top: 0;
-  margin-bottom: 24px;
-  line-height: 1.47059;
-}
-
-.footer-cta-block {
-  border: 1px solid var(--border-color);
-  padding: 24px;
-  border-radius: var(--border-radius);
-  margin-bottom: 20px;
-  background-color: var(--card-background);
-  box-shadow: var(--box-shadow-light);
-}
-
-.footer-cta-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.footer-cta-header h4 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-footer {
-  text-align: center;
-  margin-top: 80px;
-  color: var(--text-secondary);
-  font-size: 15px;
-}
-
-footer p {
-  margin: 0;
-  font-weight: 400;
-}
-
-@media (max-width: 1024px) {
-  .output {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    min-height: 600px;
-  }
-  
-  #preview-pane.mobile-preview {
-    width: 320px;
-    height: 500px;
-  }
-}
-
-@media (min-width: 1025px) {
-  .output {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  main {
-    padding: 24px 20px 80px 20px;
-  }
-  
-  header {
-    margin-bottom: 48px;
-  }
-  
-  header h1 {
-    font-size: 40px;
-  }
-  
-  header p {
-    font-size: 19px;
-  }
-  
-  .controls {
-    padding: 32px 24px;
-  }
-  
-  .panel-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  
-  .view-toggle,
-  .code-actions {
-    align-self: stretch;
-  }
-  
-  .view-btn,
-  .action-btn {
-    flex: 1;
-    min-width: auto;
-  }
-  
-  .preview-wrapper {
-    padding: 16px;
-  }
-  
-  #preview-pane.mobile-preview {
-    width: 280px;
-    height: 450px;
-  }
-  
-  .offer-body {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  
-  .img-upload-wrapper {
-    align-items: center;
-  }
-  
-  .offer-image-preview {
-    width: 200px;
-    height: 200px;
-  }
-  
-  .form-group-grid.two-col,
-  .form-group-grid.three-col {
-    grid-template-columns: 1fr;
-  }
-}
-    </style>
+    <link rel="stylesheet" href="./index.css">
   </head>
   <body>
-    <main>
-      <header>
-        <h1>Craftor</h1>
-        <p>
-        Create, customize, and conquer more with HTML-ready designs for you to use.
-        </p>
-      </header>
-      <section class="controls">
-        <div class="form-header">
-          <h2>Customize Your Email</h2>
-          <button type="button" id="merge-fields-toggle" class="merge-fields-btn">
-            Insert Merge Fields
-          </button>
-        </div>
-        <form id="email-form">
-          <div class="form-group">
-            <label for="font-family">Email Font</label>
-            <select id="font-family" name="font-family">
-              <option value="'Arial', sans-serif" style="font-family: 'Arial', sans-serif;">Arial</option>
-              <option value="'Courier New', Courier, monospace" style="font-family: 'Courier New', Courier, monospace;">Courier New</option>
-              <option value="'Georgia', serif" style="font-family: 'Georgia', serif;">Georgia</option>
-              <option value="'Helvetica', sans-serif" style="font-family: 'Helvetica', sans-serif;">Helvetica</option>
-              <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif" style="font-family: 'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;">Lucida Sans</option>
-              <option value="'Tahoma', sans-serif" style="font-family: 'Tahoma', sans-serif;">Tahoma</option>
-              <option value="'Times New Roman', Times, serif" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
-              <option value="'Trebuchet MS', 'Helvetica', sans-serif" style="font-family: 'Trebuchet MS', 'Helvetica', sans-serif;">Trebuchet MS</option>
-              <option value="'Verdana', sans-serif" style="font-family: 'Verdana', sans-serif;">Verdana</option>
-            </select>
-          </div>
+    <div class="container">
+      <main>
+        <section class="hero">
+          <h1 class="text-6xl hero-title">Craftor</h1>
+          <p class="text-lg hero-subtitle">
+            Create, customize, and conquer more with HTML-ready designs for you to use.
+          </p>
+        </section>
 
-          <div class="form-group">
-            <label for="email-style">Email Style Template</label>
-            <select id="email-style" name="email-style">
-              <option value="modern">Modern - Clean and contemporary</option>
-              <option value="classic">Classic - Professional and traditional</option>
-              <option value="bold">Bold - High contrast and vibrant</option>
-              <option value="minimal">Minimal - Simple and elegant</option>
-              <option value="automotive">Automotive - Industry-focused design</option>
-            </select>
+        <section class="card mb-6">
+          <div class="card-header">
+            <h2 class="text-2xl">Customize Your Email Content</h2>
+            <button type="button" id="merge-fields-toggle" class="btn btn-ghost btn-sm">
+              Insert Merge Fields
+            </button>
+          </div>
+          <div class="card-body">
+            <form id="email-form">
+              <div class="form-group">
+                <label for="photo" class="form-label">Add a Hero Image (optional)</label>
+                <input type="file" id="photo" name="photo" accept="image/png, image/jpeg" class="form-control" />
+              </div>
+
+              <div class="form-group">
+                <label for="email-body" class="form-label">Email Body</label>
+                <textarea
+                  id="email-body"
+                  name="email-body"
+                  rows="6"
+                  placeholder="e.g., Hi {{recipient.first_name}}, we have some exciting news about your {{customer.last_transaction.vehicle.make}}..."
+                  required
+                  class="form-control"
+                ></textarea>
+              </div>
+
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label for="body_bg_color" class="form-label">Email Body Background Color</label>
+                  <input type="color" id="body_bg_color" name="body_bg_color" value="#ffffff" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="cta_color" class="form-label">Main CTA Button Color</label>
+                  <input type="color" id="cta_color" name="cta_color" value="#4f46e5" class="form-control">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label for="cta" class="form-label">Main Call to Action Button Text</label>
+                  <input
+                    type="text"
+                    id="cta"
+                    name="cta"
+                    placeholder="e.g., See Our Specials"
+                    class="form-control"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="cta_link" class="form-label">Main Call to Action Button Link</label>
+                  <input
+                    type="text"
+                    id="cta_link"
+                    name="cta_link"
+                    placeholder="e.g., https://example.com/specials"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+
+              <!-- Offers Section -->
+              <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--separator-secondary);">
+                <h3 class="text-2xl mb-4">Promotional Offers (optional, max 5)</h3>
+                <div id="offers-container">
+                  <!-- Offer 1 -->
+                  <div class="offer-block" id="offer-block-1">
+                    <div class="offer-header">
+                      <h4 class="text-xl">Offer 1</h4>
+                    </div>
+                    <div class="offer-body">
+                      <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                        <label class="form-label" style="text-align: center;">Offer Image</label>
+                        <img
+                          id="offer_image_preview_1"
+                          src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
+                          alt="Offer 1 image preview"
+                          class="offer-image-preview"
+                        />
+                        <input
+                          type="file"
+                          id="offer_image_1"
+                          name="offer_image_1"
+                          accept="image/png, image/jpeg"
+                          class="form-control"
+                        />
+                        <div class="form-group">
+                          <label for="offer_image_position_1" class="form-label">Image Position</label>
+                          <select id="offer_image_position_1" name="offer_image_position_1" class="form-control">
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                            <option value="top">Top</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                        <div class="form-group">
+                          <label for="offer_vehicle_1" class="form-label">Vehicle / Product</label>
+                          <input
+                            type="text"
+                            id="offer_vehicle_1"
+                            name="offer_vehicle_1"
+                            placeholder="e.g., 2024 Honda Civic"
+                            class="form-control"
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="offer_title_1" class="form-label">Offer Title</label>
+                          <input
+                            type="text"
+                            id="offer_title_1"
+                            name="offer_title_1"
+                            placeholder="e.g., Lease for $299/mo"
+                            class="form-control"
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="offer_details_1" class="form-label">Offer Details</label>
+                          <textarea
+                            id="offer_details_1"
+                            name="offer_details_1"
+                            rows="3"
+                            placeholder="e.g., 36-month lease, $3,000 down."
+                            class="form-control"
+                          ></textarea>
+                        </div>
+                        <div class="grid grid-cols-3">
+                          <div class="form-group">
+                            <label for="offer_cta_text_1" class="form-label">CTA Text</label>
+                            <input
+                              type="text"
+                              id="offer_cta_text_1"
+                              name="offer_cta_text_1"
+                              placeholder="View Inventory"
+                              class="form-control"
+                            />
+                          </div>
+                          <div class="form-group">
+                            <label for="offer_cta_link_1" class="form-label">CTA Link</label>
+                            <input
+                              type="text"
+                              id="offer_cta_link_1"
+                              name="offer_cta_link_1"
+                              placeholder="https://example.com/specials"
+                              class="form-control"
+                            />
+                          </div>
+                          <div class="form-group">
+                            <label for="offer_cta_color_1" class="form-label">CTA Color</label>
+                            <input type="color" id="offer_cta_color_1" name="offer_cta_color_1" value="#4f46e5" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="offer_disclaimer_1" class="form-label">Disclaimer</label>
+                          <textarea
+                            id="offer_disclaimer_1"
+                            name="offer_disclaimer_1"
+                            rows="2"
+                            placeholder="e.g., W.A.C. See dealer for details."
+                            class="form-control"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" id="add-offer-btn" class="btn btn-secondary">
+                  Add Another Offer
+                </button>
+              </div>
+
+              <!-- Footer CTAs Section -->
+              <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--separator-secondary);">
+                <h3 class="text-2xl mb-4">Footer Call to Actions (optional, max 3)</h3>
+                <p class="text-lg" style="color: var(--label-secondary); margin-bottom: var(--spacing-lg);">
+                  These links will appear at the bottom of the email, useful for secondary actions.
+                </p>
+                <div class="grid grid-cols-2 mb-6">
+                  <div class="form-group">
+                    <label for="footer_bg_color" class="form-label">Section Background</label>
+                    <input type="color" id="footer_bg_color" name="footer_bg_color" value="#ffffff" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="footer_cta_text_color" class="form-label">Link Color</label>
+                    <input type="color" id="footer_cta_text_color" name="footer_cta_text_color" value="#4f46e5" class="form-control">
+                  </div>
+                </div>
+                <div id="footer-ctas-container">
+                  <!-- CTA 1 -->
+                  <div class="card mb-4" id="footer-cta-block-1">
+                    <div class="card-header">
+                      <h4 class="text-lg">Link 1</h4>
+                    </div>
+                    <div class="card-body">
+                      <div class="grid grid-cols-2">
+                        <div class="form-group">
+                          <label for="footer_cta_text_1" class="form-label">Link Text</label>
+                          <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" placeholder="Get In Touch" class="form-control">
+                        </div>
+                        <div class="form-group">
+                          <label for="footer_cta_link_1" class="form-label">Link URL</label>
+                          <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" placeholder="{{dealership.tracked_website_homepage_no_lp_url}}" class="form-control">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" id="add-footer-cta-btn" class="btn btn-secondary">Add Another Link</button>
+              </div>
+
+              <div class="form-group" style="margin-top: var(--spacing-2xl);">
+                <label for="disclaimer" class="form-label">Footer Disclaimer (optional)</label>
+                <textarea
+                  id="disclaimer"
+                  name="disclaimer"
+                  rows="4"
+                  placeholder="e.g., This is a promotional email. Prices and offers subject to change."
+                  class="form-control"
+                ></textarea>
+              </div>
+
+              <button type="submit" id="generate-btn" class="btn btn-primary w-full" style="margin-top: var(--spacing-xl);">
+                <span class="btn-text">Generate Template</span>
+                <div class="spinner hidden"></div>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-2" id="output-container" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-xl">Preview</h3>
+              <div class="toggle-group">
+                <button id="desktop-view-btn" class="toggle-btn active" data-view="desktop">Desktop</button>
+                <button id="mobile-view-btn" class="toggle-btn" data-view="mobile">Mobile</button>
+              </div>
+            </div>
+            <div class="preview-container">
+              <iframe id="preview-pane" title="Email Preview" class="preview-frame desktop"></iframe>
+            </div>
           </div>
           
-          <div class="form-group">
-            <label for="photo">Add a Hero Image (optional)</label>
-            <input
-              type="file"
-              id="photo"
-              name="photo"
-              accept="image/png, image/jpeg"
-            />
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-xl">HTML Code</h3>
+              <div class="flex gap-2">
+                <button id="download-btn" class="btn btn-secondary btn-sm">Download HTML</button>
+                <button id="copy-btn" class="btn btn-primary btn-sm">Copy HTML</button>
+              </div>
+            </div>
+            <div class="code-container">
+              <pre><code id="code-block" class="code-block"></code></pre>
+            </div>
           </div>
+        </section>
 
-          <div class="form-group">
-            <label for="email-body">Email Body</label>
-            <textarea
-              id="email-body"
-              name="email-body"
-              rows="6"
-              placeholder="e.g., Hi {{recipient.first_name}}, we have some exciting news about your {{customer.last_transaction.vehicle.make}}..."
-              required
-            ></textarea>
+        <section class="card" id="output-placeholder">
+          <div class="card-body" style="text-align: center; padding: var(--spacing-3xl);">
+            <p class="text-lg" style="color: var(--label-secondary);">Your generated email will appear here.</p>
           </div>
-          <div class="form-group">
-            <label for="body_bg_color">Email Body Background Color</label>
-            <input type="color" id="body_bg_color" name="body_bg_color" value="#ffffff">
-          </div>
-          <div class="form-group">
-            <label for="cta">Main Call to Action Button Text</label>
-            <input
-              type="text"
-              id="cta"
-              name="cta"
-              placeholder="e.g., See Our Specials"
-            />
-          </div>
-          <div class="form-group">
-            <label for="cta_link">Main Call to Action Button Link</label>
-            <input
-              type="text"
-              id="cta_link"
-              name="cta_link"
-              placeholder="e.g., https://example.com/specials"
-            />
-          </div>
-          <div class="form-group">
-              <label for="cta_color">Main CTA Button Color</label>
-              <input type="color" id="cta_color" name="cta_color" value="#4f46e5">
-          </div>
+        </section>
 
-          <!-- Offers Section -->
-          <div class="offers-section">
-            <h2>Promotional Offers (optional, max 5)</h2>
-            <div id="offers-container">
-              <!-- Offer 1 -->
-              <div class="offer-block" id="offer-block-1">
-                <div class="offer-header">
-                  <h3>Offer 1</h3>
-                </div>
-                <div class="offer-body">
-                  <div class="img-upload-wrapper">
-                    <label for="offer_image_1">Offer Image</label>
-                    <img
-                      id="offer_image_preview_1"
-                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
-                      alt="Offer 1 image preview"
-                      class="offer-image-preview"
-                    />
-                    <input
-                      type="file"
-                      id="offer_image_1"
-                      name="offer_image_1"
-                      accept="image/png, image/jpeg"
-                      class="offer-image-input"
-                    />
-                    <div class="form-group-grid" style="margin-top: 12px;">
-                      <label for="offer_image_position_1">Image Position</label>
-                      <select id="offer_image_position_1" name="offer_image_position_1">
-                        <option value="left">Left</option>
-                        <option value="right">Right</option>
-                        <option value="top">Top</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="offer-details-wrapper">
-                    <div class="form-group-grid">
-                      <label for="offer_vehicle_1">Vehicle / Product</label>
-                      <input
-                        type="text"
-                        id="offer_vehicle_1"
-                        name="offer_vehicle_1"
-                        placeholder="e.g., 2024 Honda Civic"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_title_1">Offer Title</label>
-                      <input
-                        type="text"
-                        id="offer_title_1"
-                        name="offer_title_1"
-                        placeholder="e.g., Lease for $299/mo"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_details_1">Offer Details</label>
-                      <textarea
-                        id="offer_details_1"
-                        name="offer_details_1"
-                        rows="3"
-                        placeholder="e.g., 36-month lease, $3,000 down."
-                      ></textarea>
-                    </div>
-                    <div class="form-group-grid three-col">
-                      <div>
-                        <label for="offer_cta_text_1">CTA Text</label>
-                        <input
-                          type="text"
-                          id="offer_cta_text_1"
-                          name="offer_cta_text_1"
-                          placeholder="View Inventory"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_cta_link_1">CTA Link</label>
-                        <input
-                          type="text"
-                          id="offer_cta_link_1"
-                          name="offer_cta_link_1"
-                          placeholder="https://example.com/specials"
-                        />
-                      </div>
-                       <div>
-                        <label for="offer_cta_color_1">CTA Color</label>
-                        <input type="color" id="offer_cta_color_1" name="offer_cta_color_1" value="#4f46e5">
-                      </div>
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_disclaimer_1">Disclaimer</label>
-                      <textarea
-                        id="offer_disclaimer_1"
-                        name="offer_disclaimer_1"
-                        rows="2"
-                        placeholder="e.g., W.A.C. See dealer for details."
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Offer 2 (hidden) -->
-              <div class="offer-block" id="offer-block-2" style="display: none">
-                <div class="offer-header">
-                  <h3>Offer 2</h3>
-                  <button
-                    type="button"
-                    class="remove-offer-btn"
-                    data-offer-num="2"
-                    aria-label="Remove Offer 2"
-                  >
-                    &times;
-                  </button>
-                </div>
-                <div class="offer-body">
-                  <div class="img-upload-wrapper">
-                    <label for="offer_image_2">Offer Image</label>
-                    <img
-                      id="offer_image_preview_2"
-                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
-                      alt="Offer 2 image preview"
-                      class="offer-image-preview"
-                    />
-                    <input
-                      type="file"
-                      id="offer_image_2"
-                      name="offer_image_2"
-                      accept="image/png, image/jpeg"
-                      class="offer-image-input"
-                    />
-                    <div class="form-group-grid" style="margin-top: 12px;">
-                      <label for="offer_image_position_2">Image Position</label>
-                      <select id="offer_image_position_2" name="offer_image_position_2">
-                        <option value="left">Left</option>
-                        <option value="right">Right</option>
-                        <option value="top">Top</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="offer-details-wrapper">
-                    <div class="form-group-grid">
-                      <label for="offer_vehicle_2">Vehicle / Product</label
-                      ><input
-                        type="text"
-                        id="offer_vehicle_2"
-                        name="offer_vehicle_2"
-                        placeholder="e.g., 2024 Honda Civic"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_title_2">Offer Title</label
-                      ><input
-                        type="text"
-                        id="offer_title_2"
-                        name="offer_title_2"
-                        placeholder="e.g., Lease for $299/mo"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_details_2">Offer Details</label
-                      ><textarea
-                        id="offer_details_2"
-                        name="offer_details_2"
-                        rows="3"
-                        placeholder="e.g., 36-month lease, $3,000 down."
-                      ></textarea>
-                    </div>
-                    <div class="form-group-grid three-col">
-                      <div>
-                        <label for="offer_cta_text_2">CTA Text</label
-                        ><input
-                          type="text"
-                          id="offer_cta_text_2"
-                          name="offer_cta_text_2"
-                          placeholder="View Inventory"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_cta_link_2">CTA Link</label
-                        ><input
-                          type="text"
-                          id="offer_cta_link_2"
-                          name="offer_cta_link_2"
-                          placeholder="https://example.com/specials"
-                        />
-                      </div>
-                       <div>
-                        <label for="offer_cta_color_2">CTA Color</label>
-                        <input type="color" id="offer_cta_color_2" name="offer_cta_color_2" value="#4f46e5">
-                      </div>
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_disclaimer_2">Disclaimer</label
-                      ><textarea
-                        id="offer_disclaimer_2"
-                        name="offer_disclaimer_2"
-                        rows="2"
-                        placeholder="e.g., W.A.C. See dealer for details."
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Offer 3 (hidden) -->
-              <div class="offer-block" id="offer-block-3" style="display: none">
-                <div class="offer-header">
-                  <h3>Offer 3</h3>
-                  <button
-                    type="button"
-                    class="remove-offer-btn"
-                    data-offer-num="3"
-                    aria-label="Remove Offer 3"
-                  >
-                    &times;
-                  </button>
-                </div>
-                <div class="offer-body">
-                  <div class="img-upload-wrapper">
-                    <label for="offer_image_3">Offer Image</label>
-                    <img
-                      id="offer_image_preview_3"
-                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
-                      alt="Offer 3 image preview"
-                      class="offer-image-preview"
-                    />
-                    <input
-                      type="file"
-                      id="offer_image_3"
-                      name="offer_image_3"
-                      accept="image/png, image/jpeg"
-                      class="offer-image-input"
-                    />
-                    <div class="form-group-grid" style="margin-top: 12px;">
-                      <label for="offer_image_position_3">Image Position</label>
-                      <select id="offer_image_position_3" name="offer_image_position_3">
-                        <option value="left">Left</option>
-                        <option value="right">Right</option>
-                        <option value="top">Top</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="offer-details-wrapper">
-                    <div class="form-group-grid">
-                      <label for="offer_vehicle_3">Vehicle / Product</label
-                      ><input
-                        type="text"
-                        id="offer_vehicle_3"
-                        name="offer_vehicle_3"
-                        placeholder="e.g., 2024 Honda Civic"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_title_3">Offer Title</label
-                      ><input
-                        type="text"
-                        id="offer_title_3"
-                        name="offer_title_3"
-                        placeholder="e.g., Lease for $299/mo"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_details_3">Offer Details</label
-                      ><textarea
-                        id="offer_details_3"
-                        name="offer_details_3"
-                        rows="3"
-                        placeholder="e.g., 36-month lease, $3,000 down."
-                      ></textarea>
-                    </div>
-                    <div class="form-group-grid three-col">
-                      <div>
-                        <label for="offer_cta_text_3">CTA Text</label
-                        ><input
-                          type="text"
-                          id="offer_cta_text_3"
-                          name="offer_cta_text_3"
-                          placeholder="View Inventory"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_cta_link_3">CTA Link</label
-                        ><input
-                          type="text"
-                          id="offer_cta_link_3"
-                          name="offer_cta_link_3"
-                          placeholder="https://example.com/specials"
-                        />
-                      </div>
-                       <div>
-                        <label for="offer_cta_color_3">CTA Color</label>
-                        <input type="color" id="offer_cta_color_3" name="offer_cta_color_3" value="#4f46e5">
-                      </div>
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_disclaimer_3">Disclaimer</label
-                      ><textarea
-                        id="offer_disclaimer_3"
-                        name="offer_disclaimer_3"
-                        rows="2"
-                        placeholder="e.g., W.A.C. See dealer for details."
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Offer 4 (hidden) -->
-              <div class="offer-block" id="offer-block-4" style="display: none">
-                <div class="offer-header">
-                  <h3>Offer 4</h3>
-                  <button
-                    type="button"
-                    class="remove-offer-btn"
-                    data-offer-num="4"
-                    aria-label="Remove Offer 4"
-                  >
-                    &times;
-                  </button>
-                </div>
-                <div class="offer-body">
-                  <div class="img-upload-wrapper">
-                    <label for="offer_image_4">Offer Image</label>
-                    <img
-                      id="offer_image_preview_4"
-                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
-                      alt="Offer 4 image preview"
-                      class="offer-image-preview"
-                    />
-                    <input
-                      type="file"
-                      id="offer_image_4"
-                      name="offer_image_4"
-                      accept="image/png, image/jpeg"
-                      class="offer-image-input"
-                    />
-                    <div class="form-group-grid" style="margin-top: 12px;">
-                      <label for="offer_image_position_4">Image Position</label>
-                      <select id="offer_image_position_4" name="offer_image_position_4">
-                        <option value="left">Left</option>
-                        <option value="right">Right</option>
-                        <option value="top">Top</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="offer-details-wrapper">
-                    <div class="form-group-grid">
-                      <label for="offer_vehicle_4">Vehicle / Product</label
-                      ><input
-                        type="text"
-                        id="offer_vehicle_4"
-                        name="offer_vehicle_4"
-                        placeholder="e.g., 2024 Honda Civic"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_title_4">Offer Title</label
-                      ><input
-                        type="text"
-                        id="offer_title_4"
-                        name="offer_title_4"
-                        placeholder="e.g., Lease for $299/mo"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_details_4">Offer Details</label
-                      ><textarea
-                        id="offer_details_4"
-                        name="offer_details_4"
-                        rows="3"
-                        placeholder="e.g., 36-month lease, $3,000 down."
-                      ></textarea>
-                    </div>
-                    <div class="form-group-grid three-col">
-                      <div>
-                        <label for="offer_cta_text_4">CTA Text</label
-                        ><input
-                          type="text"
-                          id="offer_cta_text_4"
-                          name="offer_cta_text_4"
-                          placeholder="View Inventory"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_cta_link_4">CTA Link</label
-                        ><input
-                          type="text"
-                          id="offer_cta_link_4"
-                          name="offer_cta_link_4"
-                          placeholder="https://example.com/specials"
-                        />
-                      </div>
-                       <div>
-                        <label for="offer_cta_color_4">CTA Color</label>
-                        <input type="color" id="offer_cta_color_4" name="offer_cta_color_4" value="#4f46e5">
-                      </div>
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_disclaimer_4">Disclaimer</label
-                      ><textarea
-                        id="offer_disclaimer_4"
-                        name="offer_disclaimer_4"
-                        rows="2"
-                        placeholder="e.g., W.A.C. See dealer for details."
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- Offer 5 (hidden) -->
-              <div class="offer-block" id="offer-block-5" style="display: none">
-                <div class="offer-header">
-                  <h3>Offer 5</h3>
-                  <button
-                    type="button"
-                    class="remove-offer-btn"
-                    data-offer-num="5"
-                    aria-label="Remove Offer 5"
-                  >
-                    &times;
-                  </button>
-                </div>
-                <div class="offer-body">
-                  <div class="img-upload-wrapper">
-                    <label for="offer_image_5">Offer Image</label>
-                    <img
-                      id="offer_image_preview_5"
-                      src="https://placehold.co/200x200/f1f3f5/6c757d?text=Image"
-                      alt="Offer 5 image preview"
-                      class="offer-image-preview"
-                    />
-                    <input
-                      type="file"
-                      id="offer_image_5"
-                      name="offer_image_5"
-                      accept="image/png, image/jpeg"
-                      class="offer-image-input"
-                    />
-                    <div class="form-group-grid" style="margin-top: 12px;">
-                      <label for="offer_image_position_5">Image Position</label>
-                      <select id="offer_image_position_5" name="offer_image_position_5">
-                        <option value="left">Left</option>
-                        <option value="right">Right</option>
-                        <option value="top">Top</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="offer-details-wrapper">
-                    <div class="form-group-grid">
-                      <label for="offer_vehicle_5">Vehicle / Product</label
-                      ><input
-                        type="text"
-                        id="offer_vehicle_5"
-                        name="offer_vehicle_5"
-                        placeholder="e.g., 2024 Honda Civic"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_title_5">Offer Title</label
-                      ><input
-                        type="text"
-                        id="offer_title_5"
-                        name="offer_title_5"
-                        placeholder="e.g., Lease for $299/mo"
-                      />
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_details_5">Offer Details</label
-                      ><textarea
-                        id="offer_details_5"
-                        name="offer_details_5"
-                        rows="3"
-                        placeholder="e.g., 36-month lease, $3,000 down."
-                      ></textarea>
-                    </div>
-                    <div class="form-group-grid three-col">
-                      <div>
-                        <label for="offer_cta_text_5">CTA Text</label
-                        ><input
-                          type="text"
-                          id="offer_cta_text_5"
-                          name="offer_cta_text_5"
-                          placeholder="View Inventory"
-                        />
-                      </div>
-                      <div>
-                        <label for="offer_cta_link_5">CTA Link</label
-                        ><input
-                          type="text"
-                          id="offer_cta_link_5"
-                          name="offer_cta_link_5"
-                          placeholder="https://example.com/specials"
-                        />
-                      </div>
-                       <div>
-                        <label for="offer_cta_color_5">CTA Color</label>
-                        <input type="color" id="offer_cta_color_5" name="offer_cta_color_5" value="#4f46e5">
-                      </div>
-                    </div>
-                    <div class="form-group-grid">
-                      <label for="offer_disclaimer_5">Disclaimer</label
-                      ><textarea
-                        id="offer_disclaimer_5"
-                        name="offer_disclaimer_5"
-                        rows="2"
-                        placeholder="e.g., W.A.C. See dealer for details."
-                      ></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button type="button" id="add-offer-btn" class="secondary-btn">
-              Add Another Offer
-            </button>
-          </div>
-
-          <!-- Footer CTAs Section -->
-          <div class="footer-ctas-section">
-            <h2>Footer Call to Actions (optional, max 3)</h2>
-            <p>These links will appear at the bottom of the email, useful for secondary actions.</p>
-            <div class="form-group-grid two-col">
-                <div class="form-group">
-                    <label for="footer_bg_color">Section Background</label>
-                    <input type="color" id="footer_bg_color" name="footer_bg_color" value="#ffffff">
-                </div>
-                <div class="form-group">
-                    <label for="footer_cta_text_color">Link Color</label>
-                    <input type="color" id="footer_cta_text_color" name="footer_cta_text_color" value="#4f46e5">
-                </div>
-            </div>
-            <div id="footer-ctas-container">
-              <!-- CTA 1 -->
-              <div class="footer-cta-block" id="footer-cta-block-1">
-                 <div class="footer-cta-header">
-                    <h4>Link 1</h4>
-                 </div>
-                <div class="form-group-grid two-col">
-                  <div>
-                    <label for="footer_cta_text_1">Link Text</label>
-                    <input type="text" id="footer_cta_text_1" name="footer_cta_text_1" placeholder="Get In Touch">
-                  </div>
-                  <div>
-                    <label for="footer_cta_link_1">Link URL</label>
-                    <input type="text" id="footer_cta_link_1" name="footer_cta_link_1" placeholder="{{dealership.tracked_website_homepage_no_lp_url}}">
-                  </div>
-                </div>
-              </div>
-              <!-- CTA 2 (hidden) -->
-              <div class="footer-cta-block" id="footer-cta-block-2" style="display: none;">
-                <div class="footer-cta-header">
-                  <h4>Link 2</h4>
-                  <button type="button" class="remove-footer-cta-btn" data-cta-num="2" aria-label="Remove Link 2">&times;</button>
-                </div>
-                <div class="form-group-grid two-col">
-                  <div>
-                    <label for="footer_cta_text_2">Link Text</label>
-                    <input type="text" id="footer_cta_text_2" name="footer_cta_text_2" placeholder="e.g., View Our Inventory">
-                  </div>
-                  <div>
-                    <label for="footer_cta_link_2">Link URL</label>
-                    <input type="text" id="footer_cta_link_2" name="footer_cta_link_2" placeholder="e.g., https://example.com/inventory">
-                  </div>
-                </div>
-              </div>
-              <!-- CTA 3 (hidden) -->
-              <div class="footer-cta-block" id="footer-cta-block-3" style="display: none;">
-                <div class="footer-cta-header">
-                  <h4>Link 3</h4>
-                  <button type="button" class="remove-footer-cta-btn" data-cta-num="3" aria-label="Remove Link 3">&times;</button>
-                </div>
-                <div class="form-group-grid two-col">
-                  <div>
-                    <label for="footer_cta_text_3">Link Text</label>
-                    <input type="text" id="footer_cta_text_3" name="footer_cta_text_3" placeholder="e.g., Schedule Service">
-                  </div>
-                  <div>
-                    <label for="footer_cta_link_3">Link URL</label>
-                    <input type="text" id="footer_cta_link_3" name="footer_cta_link_3" placeholder="e.g., https://example.com/service">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <button type="button" id="add-footer-cta-btn" class="secondary-btn">Add Another Link</button>
-          </div>
-
-          <div class="form-group">
-            <label for="disclaimer">Footer Disclaimer (optional)</label>
-            <textarea
-              id="disclaimer"
-              name="disclaimer"
-              rows="4"
-              placeholder="e.g., This is a promotional email. Prices and offers subject to change."
-            ></textarea>
-          </div>
-
-          <button type="submit" id="generate-btn">
-            <span class="btn-text">Generate Template</span>
-            <div class="spinner" style="display: none"></div>
-          </button>
-        </form>
-      </section>
-      <section class="output" id="output-container" style="display: none">
-        <div class="output-panel">
-          <div class="panel-header">
-            <h2>Preview</h2>
-            <div class="view-toggle">
-              <button id="desktop-view-btn" class="view-btn active" data-view="desktop">Desktop</button>
-              <button id="mobile-view-btn" class="view-btn" data-view="mobile">Mobile</button>
-            </div>
-          </div>
-          <div class="preview-container">
-            <div class="preview-wrapper">
-              <iframe id="preview-pane" title="Email Preview" class="desktop-preview"></iframe>
-            </div>
-          </div>
-        </div>
-        <div class="output-panel">
-          <div class="panel-header">
-            <h2>HTML Code</h2>
-            <div class="code-actions">
-              <button id="download-btn" class="action-btn">Download HTML</button>
-              <button id="copy-btn" class="action-btn primary">Copy HTML</button>
-            </div>
-          </div>
-          <div class="code-container">
-            <div class="code-wrapper">
-              <div class="code-content" id="code-content">
-                <pre><code id="code-block"></code></pre>
-              </div>
-              <div class="code-scroll-indicator" id="scroll-indicator"></div>
-            </div>
-            <div class="code-expand-controls">
-              <button id="expand-code-btn" class="expand-btn">
-                <span>Show More</span>
-                <span class="expand-icon">▼</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="output-placeholder" id="output-placeholder">
-        <p>Your generated email will appear here.</p>
-      </section>
-      <footer>
-        <p>Created by Jayden Wallace © 2025</p>
-      </footer>
-    </main>
+        <footer style="text-align: center; margin-top: var(--spacing-3xl); color: var(--label-secondary);">
+          <p class="text-sm">Created by Jayden Wallace © 2025</p>
+        </footer>
+      </main>
+    </div>
     
-    <!-- Merge Fields Sidebar -->
-    <div id="merge-fields-sidebar" class="merge-fields-sidebar">
+    <!-- Design Customization Sidebar (Left) -->
+    <div id="design-sidebar" class="design-sidebar">
       <div class="sidebar-header">
-        <h3>Insert Merge Field</h3>
-        <button type="button" id="close-sidebar" class="close-sidebar-btn">&times;</button>
+        <h3 class="text-xl">Design Customization</h3>
+        <button type="button" id="close-design-sidebar" class="btn btn-secondary btn-sm" style="width: 32px; height: 32px; padding: 0; border-radius: 50%;">&times;</button>
       </div>
       <div class="sidebar-content">
-        <div class="merge-fields-list">
-          <div class="merge-field-group">
-            <button type="button" class="category-toggle">
-              Recipient & Dealer
-              <span class="toggle-icon"></span>
-            </button>
-            <div class="category-content">
+        <!-- Font Selection -->
+        <div class="design-option-group">
+          <h4>Email Font</h4>
+          <select id="design-font-family" name="design-font-family" class="form-control">
+            <option value="'Arial', sans-serif">Arial</option>
+            <option value="'Courier New', Courier, monospace">Courier New</option>
+            <option value="'Georgia', serif">Georgia</option>
+            <option value="'Helvetica', sans-serif">Helvetica</option>
+            <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans</option>
+            <option value="'Tahoma', sans-serif">Tahoma</option>
+            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+            <option value="'Trebuchet MS', 'Helvetica', sans-serif">Trebuchet MS</option>
+            <option value="'Verdana', sans-serif">Verdana</option>
+          </select>
+        </div>
+
+        <!-- Color Schemes -->
+        <div class="design-option-group">
+          <h4>Color Schemes</h4>
+          <div class="color-scheme-grid">
+            <div class="color-scheme-option selected" data-scheme="modern">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #007aff;"></div>
+                <div class="color-dot" style="background: #ffffff;"></div>
+                <div class="color-dot" style="background: #f5f5f7;"></div>
+                <div class="color-dot" style="background: #1d1d1f;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Modern Blue</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Clean and professional</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="warm">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #ff6b35;"></div>
+                <div class="color-dot" style="background: #fff8f5;"></div>
+                <div class="color-dot" style="background: #ffeee6;"></div>
+                <div class="color-dot" style="background: #2d1810;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Warm Orange</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Friendly and inviting</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="elegant">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #6366f1;"></div>
+                <div class="color-dot" style="background: #fafafa;"></div>
+                <div class="color-dot" style="background: #f8fafc;"></div>
+                <div class="color-dot" style="background: #1e293b;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Elegant Purple</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Sophisticated and refined</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="nature">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #10b981;"></div>
+                <div class="color-dot" style="background: #f0fdf4;"></div>
+                <div class="color-dot" style="background: #ecfdf5;"></div>
+                <div class="color-dot" style="background: #14532d;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Nature Green</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Fresh and natural</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="corporate">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #374151;"></div>
+                <div class="color-dot" style="background: #ffffff;"></div>
+                <div class="color-dot" style="background: #f9fafb;"></div>
+                <div class="color-dot" style="background: #111827;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Corporate Gray</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Professional and trustworthy</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="vibrant">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #ec4899;"></div>
+                <div class="color-dot" style="background: #fdf2f8;"></div>
+                <div class="color-dot" style="background: #fce7f3;"></div>
+                <div class="color-dot" style="background: #831843;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Vibrant Pink</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Bold and energetic</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layout Styles -->
+        <div class="design-option-group">
+          <h4>Layout Styles</h4>
+          <div class="layout-style-grid">
+            <div class="layout-option selected" data-layout="centered">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Centered Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Traditional centered content with equal margins</div>
+            </div>
+            
+            <div class="layout-option" data-layout="full-width">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Full Width Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Content spans the full width with edge-to-edge design</div>
+            </div>
+            
+            <div class="layout-option" data-layout="card-style">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Card Style Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Modern card-based layout with rounded corners</div>
+            </div>
+            
+            <div class="layout-option" data-layout="minimal">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Minimal Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Clean and spacious with lots of white space</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Button Styles -->
+        <div class="design-option-group">
+          <h4>Button Styles</h4>
+          <div class="button-style-grid">
+            <div class="button-style-option selected" data-button="rounded">
+              <div class="button-preview" style="background: #007aff; border-radius: 8px;">Rounded Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Modern rounded corners</div>
+            </div>
+            
+            <div class="button-style-option" data-button="pill">
+              <div class="button-preview" style="background: #007aff; border-radius: 20px;">Pill Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Fully rounded pill shape</div>
+            </div>
+            
+            <div class="button-style-option" data-button="square">
+              <div class="button-preview" style="background: #007aff; border-radius: 0px;">Square Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Classic square edges</div>
+            </div>
+            
+            <div class="button-style-option" data-button="outlined">
+              <div class="button-preview" style="background: transparent; border: 2px solid #007aff; color: #007aff; border-radius: 8px;">Outlined Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Outline style with border</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Merge Fields Sidebar (Right) -->
+    <div id="merge-fields-sidebar" class="merge-fields-sidebar">
+      <div class="sidebar-header">
+        <h3 class="text-xl">Insert Merge Field</h3>
+        <button type="button" id="close-sidebar" class="btn btn-secondary btn-sm" style="width: 32px; height: 32px; padding: 0; border-radius: 50%;">&times;</button>
+      </div>
+      <div class="sidebar-content">
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            Recipient & Dealer
+            <span style="transform: rotate(0deg); transition: transform var(--transition-base);">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-body">
               <div class="merge-field-item" data-value="{{recipient.first_name}}">
-                <span>Recipient First Name</span><code>{{recipient.first_name}}</code>
+                <span>Recipient First Name</span>
+                <code class="merge-field-code">{{recipient.first_name}}</code>
               </div>
               <div class="merge-field-item" data-value="{{dealership.name}}">
-                <span>Dealership Name</span><code>{{dealership.name}}</code>
+                <span>Dealership Name</span>
+                <code class="merge-field-code">{{dealership.name}}</code>
               </div>
               <div class="merge-field-item" data-value="{{dealership.phone_number}}">
-                <span>Dealership Phone</span><code>{{dealership.phone_number}}</code>
+                <span>Dealership Phone</span>
+                <code class="merge-field-code">{{dealership.phone_number}}</code>
               </div>
               <div class="merge-field-item" data-value="{{dealership.address}}">
-                <span>Dealership Address</span><code>{{dealership.address}}</code>
-              </div>
-               <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
-                <span>Dealership Website</span><code>{{dealership.website_homepage_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.sales.representative.name}}">
-                <span>Sales Rep Name</span><code>{{dealership.sales.representative.name}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.sales.representative.title}}">
-                <span>Sales Rep Title</span><code>{{dealership.sales.representative.title}}</code>
+                <span>Dealership Address</span>
+                <code class="merge-field-code">{{dealership.address}}</code>
               </div>
             </div>
           </div>
-          <div class="merge-field-group">
-            <button type="button" class="category-toggle">
-              Customer Vehicle & Transaction
-              <span class="toggle-icon"></span>
-            </button>
-            <div class="category-content">
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            Customer Vehicle & Transaction
+            <span style="transform: rotate(0deg); transition: transform var(--transition-base);">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-body">
               <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.year}}">
-                <span>Vehicle Year</span><code>{{customer.last_transaction.vehicle.year}}</code>
+                <span>Vehicle Year</span>
+                <code class="merge-field-code">{{customer.last_transaction.vehicle.year}}</code>
               </div>
               <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.make}}">
-                <span>Vehicle Make</span><code>{{customer.last_transaction.vehicle.make}}</code>
+                <span>Vehicle Make</span>
+                <code class="merge-field-code">{{customer.last_transaction.vehicle.make}}</code>
               </div>
               <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
-                <span>Vehicle Model</span><code>{{customer.last_transaction.vehicle.model}}</code>
-              </div>
-               <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.vin}}">
-                <span>Vehicle VIN</span><code>{{customer.last_transaction.vehicle.vin}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.equity_payout_formatted}}">
-                <span>Equity Payout</span><code>{{customer.last_transaction.vehicle.equity_payout_formatted}}</code>
+                <span>Vehicle Model</span>
+                <code class="merge-field-code">{{customer.last_transaction.vehicle.model}}</code>
               </div>
             </div>
           </div>
-           <div class="merge-field-group">
-            <button type="button" class="category-toggle">
-              Website Links
-              <span class="toggle-icon"></span>
-            </button>
-            <div class="category-content">
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            Website Links
+            <span style="transform: rotate(0deg); transition: transform var(--transition-base);">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-body">
               <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
-                  <span>Tracked Homepage (No LP)</span><code>{{dealership.tracked_website_homepage_no_lp_url}}</code>
+                <span>Tracked Homepage (No LP)</span>
+                <code class="merge-field-code">{{dealership.tracked_website_homepage_no_lp_url}}</code>
               </div>
               <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
-                  <span>Tracked Service (No LP)</span><code>{{dealership.tracked_website_service_no_lp_url}}</code>
+                <span>Tracked Service (No LP)</span>
+                <code class="merge-field-code">{{dealership.tracked_website_service_no_lp_url}}</code>
               </div>
               <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
-                  <span>Homepage URL</span><code>{{dealership.website_homepage_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_url}}">
-                  <span>Tracked Accessories</span><code>{{dealership.tracked_website_accessories_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_accessories_no_lp_url}}">
-                  <span>Tracked Accessories (No LP)</span><code>{{dealership.tracked_website_accessories_no_lp_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_url}}">
-                  <span>Tracked Body Shop</span><code>{{dealership.tracked_website_body_shop_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_body_shop_no_lp_url}}">
-                  <span>Tracked Body Shop (No LP)</span><code>{{dealership.tracked_website_body_shop_no_lp_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_url}}">
-                  <span>Tracked Service Scheduler</span><code>{{dealership.tracked_website_service_scheduler_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_scheduler_no_lp_url}}">
-                  <span>Tracked Service Scheduler (No LP)</span><code>{{dealership.tracked_website_service_scheduler_no_lp_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_url}}">
-                  <span>Tracked Service Specials</span><code>{{dealership.tracked_website_service_specials_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_specials_no_lp_url}}">
-                  <span>Tracked Service Specials (No LP)</span><code>{{dealership.tracked_website_service_specials_no_lp_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.website_service_customer_reviews_url}}">
-                  <span>Service Reviews URL</span><code>{{dealership.website_service_customer_reviews_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_url}}">
-                  <span>Tracked Service Reviews</span><code>{{dealership.tracked_website_service_customer_reviews_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_customer_reviews_no_lp_url}}">
-                  <span>Tracked Service Reviews (No LP)</span><code>{{dealership.tracked_website_service_customer_reviews_no_lp_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_url}}">
-                  <span>Tracked Tires</span><code>{{dealership.tracked_website_tires_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_tires_no_lp_url}}">
-                  <span>Tracked Tires (No LP)</span><code>{{dealership.tracked_website_tires_no_lp_url}}</code>
-              </div>
-              <div class="merge-field-item" data-value="{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}">
-                  <span>Tracked Vehicle Acquisition (No LP)</span><code>{{dealership.tracked_website_vehicle_acquisition_no_lp_url}}</code>
+                <span>Homepage URL</span>
+                <code class="merge-field-code">{{dealership.website_homepage_url}}</code>
               </div>
             </div>
-          </div>
-           <div class="merge-field-group">
-              <button type="button" class="category-toggle">
-                Recall Data
-                <span class="toggle-icon"></span>
-              </button>
-              <div class="category-content">
-                <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_campaign_number}}">
-                    <span>Recall Campaign Number</span><code>{{customer.last_sold_vehicle.recall_campaign_number}}</code>
-                </div>
-                <div class="merge-field-item" data-value="{{customer.last_sold_vehicle.recall_description}}">
-                    <span>Recall Description</span><code>{{customer.last_sold_vehicle.recall_description}}</code>
-                </div>
-              </div>
           </div>
         </div>
       </div>
@@ -1961,295 +519,18 @@ footer p {
     
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
     
-    <!-- Floating Merge Fields Button -->
-    <button type="button" id="floating-merge-btn" class="floating-merge-btn" title="Insert Merge Fields">
-      <span class="btn-icon"></span>
+    <!-- Floating Action Buttons -->
+    <button type="button" id="floating-design-btn" class="fab fab-design" title="Design Customization">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+      </svg>
     </button>
-    <script type="module">
-/**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-const emailForm = document.getElementById('email-form');
-const generateBtn = document.getElementById('generate-btn');
-const btnText = document.querySelector('#generate-btn .btn-text');
-const spinner = document.querySelector('#generate-btn .spinner');
-const outputContainer = document.getElementById('output-container');
-const outputPlaceholder = document.getElementById('output-placeholder');
-const previewPane = document.getElementById('preview-pane');
-const codeBlock = document.getElementById('code-block');
-const copyBtn = document.getElementById('copy-btn');
-const addOfferBtn = document.getElementById('add-offer-btn');
-const emailBodyTextarea = document.getElementById('email-body');
-
-// Code expansion elements
-const codeContent = document.getElementById('code-content');
-const expandBtn = document.getElementById('expand-code-btn');
-const scrollIndicator = document.getElementById('scroll-indicator');
-
-const setLoading = (isLoading) => {
-  if (isLoading) {
-    generateBtn.disabled = true;
-    btnText.style.display = 'none';
-    spinner.style.display = 'block';
-  } else {
-    generateBtn.disabled = false;
-    btnText.style.display = 'block';
-    spinner.style.display = 'none';
-  }
-};
-
-const readFileAsDataURL = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-    reader.readAsDataURL(file);
-  });
-};
-
-const getContrastColor = (hexColor) => {
-  if (!hexColor) return '#333333';
-  const hex = hexColor.replace('#', '');
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  const brightness = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-  return (brightness > 125) ? '#333333' : '#ffffff';
-};
-
-// Code expansion functionality
-const setupCodeExpansion = () => {
-  let isExpanded = false;
-
-  const updateScrollIndicator = () => {
-    const element = codeContent;
-    const isScrollable = element.scrollHeight > element.clientHeight;
-    const isAtBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
     
-    if (isScrollable && !isAtBottom && !isExpanded) {
-      scrollIndicator.classList.remove('hidden');
-    } else {
-      scrollIndicator.classList.add('hidden');
-    }
-  };
+    <button type="button" id="floating-merge-btn" class="fab fab-merge" title="Insert Merge Fields">
+      <span style="font-family: var(--font-family-mono); font-size: 16px; font-weight: bold;">{{}}</span>
+    </button>
 
-  const toggleExpansion = () => {
-    isExpanded = !isExpanded;
-    
-    if (isExpanded) {
-      codeContent.classList.add('expanded');
-      expandBtn.classList.add('expanded');
-      expandBtn.querySelector('span').textContent = 'Show Less';
-    } else {
-      codeContent.classList.remove('expanded');
-      expandBtn.classList.remove('expanded');
-      expandBtn.querySelector('span').textContent = 'Show More';
-    }
-    
-    updateScrollIndicator();
-  };
-
-  expandBtn.addEventListener('click', toggleExpansion);
-  codeContent.addEventListener('scroll', updateScrollIndicator);
-  
-  // Update indicator when content changes
-  const observer = new MutationObserver(updateScrollIndicator);
-  observer.observe(codeBlock, { childList: true, subtree: true, characterData: true });
-  
-  // Initial update
-  setTimeout(updateScrollIndicator, 100);
-};
-
-const generateEmailHtml = (data) => {
-  const {
-    bodyContent,
-    heroImage,
-    ctaText,
-    ctaLink,
-    ctaColor,
-    offers,
-    disclaimer,
-    bodyBackgroundColor,
-    fontFamily,
-    footerCtas,
-    footerBackgroundColor,
-    footerCtaTextColor,
-  } = data;
-  const mainButtonColor = ctaColor || '#4f46e5';
-  const mainBodyBg = bodyBackgroundColor || '#ffffff';
-  const mainBodyTextColor = getContrastColor(mainBodyBg);
-  const emailFont = fontFamily || "'Arial', sans-serif";
-  const msoFont = emailFont.split(',')[0].replace(/'/g, '').trim();
-  const footerBg = footerBackgroundColor || '#ffffff';
-  const footerButtonBg = footerBg;
-  const footerButtonText = footerCtaTextColor || '#4f46e5';
-
-  const renderOffer = (offer) => {
-    if (!offer.title && !offer.vehicle && !offer.details) return '';
-    
-    const offerButtonColor = offer.ctaColor || '#4f46e5';
-    const imagePosition = offer.imagePosition || 'left';
-    
-    // Generate content sections
-    const textContent = `
-      <h3 style="margin: 0 0 5px 0; font-size: 16px; font-weight: bold; color: #4a5568;">${offer.vehicle || ''}</h3>
-      <h2 style="margin: 0 0 10px 0; font-size: 20px; font-weight: bold; color: #1a202c;">${offer.title || ''}</h2>
-      <p style="margin: 0 0 15px 0; font-size: 14px; line-height: 1.6;">${offer.details.replace(/\n/g, '<br />') || ''}</p>
-      ${ offer.ctaText && offer.ctaLink ? `
-        <div><!--[if mso]>
-          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${offer.ctaLink}" style="height:40px;v-text-anchor:middle;width:150px;" arcsize="13%" strokecolor="${offerButtonColor}" fillcolor="${offerButtonColor}">
-            <w:anchorlock/>
-            <center style="color:#ffffff;font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${offer.ctaText}</center>
-          </v:roundrect>
-        <![endif]--><a href="${offer.ctaLink}"
-        style="background-color:${offerButtonColor};border-radius:5px;color:#ffffff;display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">${offer.ctaText}</a></div>` : ''
-      }
-      ${ offer.disclaimer ? `<p style="margin: 15px 0 0 0; font-size: 8px; color: #718096; line-height: 1.5;">${offer.disclaimer.replace(/\n/g, '<br />')}</p>` : '' }
-    `;
-
-    if (!offer.imageDataUrl) {
-      // No image, just show text content
-      return `
-        <tr>
-          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
-            <div style="font-family: ${emailFont}; color: #333333;">
-              ${textContent}
-            </div>
-          </td>
-        </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
-    }
-
-    // Handle different image positions
-    if (imagePosition === 'top') {
-      return `
-        <tr>
-          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-              <tr>
-                <td align="center" style="padding-bottom: 20px;">
-                  <img src="${offer.imageDataUrl}" width="100%" alt="${offer.title}" style="display: block; max-width: 560px; height: auto; border: 0; border-radius: 8px;">
-                </td>
-              </tr>
-              <tr>
-                <td style="font-family: ${emailFont}; color: #333333;">
-                  ${textContent}
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
-    } else if (imagePosition === 'right') {
-      return `
-        <tr>
-          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-              <tr>
-                <td valign="top" style="font-family: ${emailFont}; color: #333333; padding-right: 20px;">
-                  ${textContent}
-                </td>
-                <td width="240" valign="top">
-                  <img src="${offer.imageDataUrl}" width="240" alt="${offer.title}" style="display: block; width: 100%; max-width: 240px; border: 0; border-radius: 8px;">
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
-    } else {
-      // Default: left position
-      return `
-        <tr>
-          <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: #ffffff;">
-            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-              <tr>
-                <td width="240" valign="top" style="padding-right: 20px;">
-                  <img src="${offer.imageDataUrl}" width="240" alt="${offer.title}" style="display: block; width: 100%; max-width: 240px; border: 0; border-radius: 8px;">
-                </td>
-                <td valign="top" style="font-family: ${emailFont}; color: #333333;">
-                  ${textContent}
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>`;
-    }
-  };
-
-  const offersHtml = offers.map(renderOffer).join('');
-
-  const footerCtasHtml = footerCtas && footerCtas.length > 0 ? `
-    <tr><td style="font-size: 20px; line-height: 20px;">&nbsp;</td></tr>
-    <tr>
-      <td style="padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; background-color: ${footerBg};">
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-          <tbody>
-            ${footerCtas.map((cta, index) => {
-              return `
-              <tr>
-                <td align="center" style="padding-bottom: ${index < footerCtas.length - 1 ? '15px' : '0'};">
-                  <!--[if mso]>
-                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${cta.link}" style="height:40px;v-text-anchor:middle;width:250px;" arcsize="13%" strokecolor="${footerButtonBg}" fillcolor="${footerButtonBg}">
-                      <w:anchorlock/>
-                      <center style="color:${footerButtonText};font-family:${msoFont}, sans-serif;font-size:14px;font-weight:bold;">${cta.text}</center>
-                    </v:roundrect>
-                  <![endif]-->
-                  <a href="${cta.link}" target="_blank"
-                  style="background-color:${footerButtonBg};border:none;border-radius:5px;color:${footerButtonText};display:inline-block;font-family:${emailFont};font-size:14px;font-weight:bold;line-height:40px;text-align:center;text-decoration:none;width:250px;-webkit-text-size-adjust:none;mso-hide:all;">${cta.text}</a>
-                </td>
-              </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      </td>
-    </tr>
-  ` : '';
-
-  return `
-  <!DOCTYPE html>
-  <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-  <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="x-apple-disable-message-reformatting">
-      <title>Promotional Email</title>
-      <!--[if mso]>
-          <style>
-              * {
-                  font-family: ${msoFont}, sans-serif !important;
-              }
-          </style>
-      <![endif]-->
-      <style>
-          html, body {
-              margin: 0 auto !important;
-              padding: 0 !important;
-              height: 100% !important;
-              width: 100% !important;
-              background: #f1f3f5;
-          }
-          * { -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
-          table, td { mso-table-lspace: 0pt !important; mso-table-rspace: 0pt !important; }
-          img { -ms-interpolation-mode:bicubic; }
-          a { text-decoration: none; }
-          @media screen and (max-width: 600px) {
-              .email-container {
-                  width: 100% !important;
-                  margin: auto !important;
-              }
-          }
-      </style>
-  </head>
-  <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #f1f3f5;">
-      <center style="width: 100%; background-color: #f1f3f5;">
-          <div style="max-width: 600px; margin: 0 auto;" class="email-container">
-              <!--[if mso]>
-              <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
-              <tr>
+    <script type="module" src="./index.ts"></script>
+  </body>
+</html>

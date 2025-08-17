@@ -1,4 +1,5 @@
 
+
 /**
  * @license
  * Copyright Wallace, Jayden
@@ -387,45 +388,49 @@ const generateEmailHtml = (data: EmailData): string => {
               <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
                   <tr>
                       <td style="padding: 20px; font-family: ${emailFont}; font-size: 15px; line-height: 1.5; color: #333333;">
-                        ${ heroImage ? `
-                          <tr>
-                            <td>
-                              <img src="${heroImage}" alt="Hero Image" width="600" style="width: 100%; max-width: 600px; height: auto; margin: auto; display: block; border-radius: 8px;">
-                            </td>
-                          </tr>
-                          <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
-                          ` : ''
-                        }
-                        ${heroMessageHtml}
-                          <tr>
-                              <td style="padding: 10px 20px; background-color: ${mainBodyBg}; border-radius: 8px; ${layoutStyles.mainContainerStyle}">
-                                  <p style="margin: 0; color: ${mainBodyTextColor};">${bodyContent.replace(/\n/g, '<br />')}</p>
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                          <tbody>
+                            ${ heroImage ? `
+                            <tr>
+                              <td>
+                                <img src="${heroImage}" alt="Hero Image" width="600" style="width: 100%; max-width: 600px; height: auto; margin: auto; display: block; border-radius: 8px;">
                               </td>
-                          </tr>
-                          <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
-                          ${ ctaText && ctaLink ? `
-                          <tr>
-                              <td align="center">
-                                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                      <tr>
-                                          <td>
-                                            ${renderButton(ctaText, ctaLink, mainButtonColor, buttonStyle, mainBodyBg, { width: '200px', height: '50px', fontSize: '16px' }, ctaTextColor)}
-                                          </td>
-                                      </tr>
-                                  </table>
-                              </td>
-                          </tr>
-                          <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
-                          `: ''}
-                          ${offersHtml ? `<tr><td><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">${offersHtml}</table></td></tr>` : '' }
-                          ${footerCtasHtml}
-                          ${ disclaimer ? `
-                          <tr>
-                              <td style="text-align: center; padding: 20px; font-family: ${emailFont}; font-size: 8px; line-height: 1.5; color: #718096;">
-                                  ${disclaimer.replace(/\n/g, '<br />')}
-                              </td>
-                          </tr>
-                          ` : '' }
+                            </tr>
+                            <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
+                            ` : ''
+                          }
+                          ${heroMessageHtml}
+                            <tr>
+                                <td style="padding: 10px 20px; background-color: ${mainBodyBg}; border-radius: 8px; ${layoutStyles.mainContainerStyle}">
+                                    <p style="margin: 0; color: ${mainBodyTextColor};">${bodyContent.replace(/\n/g, '<br />')}</p>
+                                </td>
+                            </tr>
+                            <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
+                            ${ ctaText && ctaLink ? `
+                            <tr>
+                                <td align="center">
+                                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>
+                                              ${renderButton(ctaText, ctaLink, mainButtonColor, buttonStyle, mainBodyBg, { width: '200px', height: '50px', fontSize: '16px' }, ctaTextColor)}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
+                            `: ''}
+                            ${offersHtml ? `<tr><td><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">${offersHtml}</table></td></tr>` : '' }
+                            ${footerCtasHtml}
+                            ${ disclaimer ? `
+                            <tr>
+                                <td style="text-align: center; padding: 20px; font-family: ${emailFont}; font-size: 8px; line-height: 1.5; color: #718096;">
+                                    ${disclaimer.replace(/\n/g, '<br />')}
+                                </td>
+                            </tr>
+                            ` : '' }
+                          </tbody>
+                        </table>
                       </td>
                   </tr>
               </table>

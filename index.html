@@ -1,0 +1,451 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Craftor</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div class="container">
+      <main>
+        <section class="hero">
+          <h1 class="text-6xl hero-title">Craftor</h1>
+          <p class="text-lg hero-subtitle">
+            Create, customize, and conquer more with HTML-ready designs for you to use.
+          </p>
+        </section>
+
+        <section class="card mb-6">
+          <div class="card-header">
+            <h2 class="text-2xl">Customize Your Email Content</h2>
+            <button type="button" id="merge-fields-toggle" class="btn btn-ghost btn-sm">
+              Insert Merge Fields
+            </button>
+          </div>
+          <div class="card-body">
+            <form id="email-form">
+              <div class="form-group">
+                <label for="photo" class="form-label">Add a Hero Image (optional)</label>
+                <input type="file" id="photo" name="photo" accept="image/png, image/jpeg" class="form-control" />
+              </div>
+
+              <div class="form-group">
+                <label for="hero_message" class="form-label">Hero Message (optional)</label>
+                <textarea id="hero_message" name="hero_message" rows="2" placeholder="e.g., A Special Offer Just For You!" class="form-control"></textarea>
+              </div>
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label for="hero_message_bg_color" class="form-label">Message BG Color</label>
+                  <input type="color" id="hero_message_bg_color" name="hero_message_bg_color" value="#ffffff" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="hero_message_color" class="form-label">Message Color</label>
+                  <input type="color" id="hero_message_color" name="hero_message_color" value="#1d1d1f" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="hero_message_font_size" class="form-label">Message Font Size (px)</label>
+                  <input type="number" id="hero_message_font_size" name="hero_message_font_size" value="24" min="12" max="72" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email-body" class="form-label">Email Body</label>
+                <textarea
+                  id="email-body"
+                  name="email-body"
+                  rows="6"
+                  placeholder="e.g., Hi {{recipient.first_name}}, we have some exciting news about your {{customer.last_transaction.vehicle.make}}..."
+                  required
+                  class="form-control"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="body_bg_color" class="form-label">Email Body Background Color</label>
+                <input type="color" id="body_bg_color" name="body_bg_color" value="#ffffff" class="form-control">
+              </div>
+
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label for="cta" class="form-label">Main Call to Action Button Text</label>
+                  <input
+                    type="text"
+                    id="cta"
+                    name="cta"
+                    placeholder="e.g., See Our Specials"
+                    class="form-control"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="cta_link" class="form-label">Main Call to Action Button Link</label>
+                  <input
+                    type="text"
+                    id="cta_link"
+                    name="cta_link"
+                    placeholder="e.g., https://example.com/specials"
+                    class="form-control"
+                  />
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label for="cta_color" class="form-label">Main CTA BG Color</label>
+                  <input type="color" id="cta_color" name="cta_color" value="#4f46e5" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label for="cta_text_color" class="form-label">Main CTA Text Color</label>
+                  <input type="color" id="cta_text_color" name="cta_text_color" value="#ffffff" class="form-control">
+                </div>
+              </div>
+
+              <!-- Offers Section -->
+              <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--separator-secondary);">
+                <h3 class="text-2xl mb-4">Promotional Offers (optional, max 5)</h3>
+                <div id="offers-container">
+                  <!-- Offer blocks will be dynamically inserted here -->
+                </div>
+                <button type="button" id="add-offer-btn" class="btn btn-secondary">
+                  Add Another Offer
+                </button>
+              </div>
+
+              <!-- Footer CTAs Section -->
+              <div style="margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--separator-secondary);">
+                <h3 class="text-2xl mb-4">Footer Call to Actions (optional, max 3)</h3>
+                <p class="text-lg" style="color: var(--label-secondary); margin-bottom: var(--spacing-lg);">
+                  These links will appear at the bottom of the email, useful for secondary actions.
+                </p>
+                <div class="grid grid-cols-3 mb-6">
+                  <div class="form-group">
+                    <label for="footer_bg_color" class="form-label">Section Background</label>
+                    <input type="color" id="footer_bg_color" name="footer_bg_color" value="#ffffff" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="footer_cta_bg_color" class="form-label">Button BG Color</label>
+                    <input type="color" id="footer_cta_bg_color" name="footer_cta_bg_color" value="#4f46e5" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="footer_cta_text_color" class="form-label">Button Text Color</label>
+                    <input type="color" id="footer_cta_text_color" name="footer_cta_text_color" value="#ffffff" class="form-control">
+                  </div>
+                </div>
+                <div id="footer-ctas-container">
+                  <!-- Footer CTA blocks will be dynamically inserted here -->
+                </div>
+                <button type="button" id="add-footer-cta-btn" class="btn btn-secondary">Add Another Link</button>
+              </div>
+
+              <div class="form-group" style="margin-top: var(--spacing-2xl);">
+                <label for="disclaimer" class="form-label">Footer Disclaimer (optional)</label>
+                <textarea
+                  id="disclaimer"
+                  name="disclaimer"
+                  rows="4"
+                  placeholder="e.g., This is a promotional email. Prices and offers subject to change."
+                  class="form-control"
+                ></textarea>
+              </div>
+
+              <button type="submit" id="generate-btn" class="btn btn-primary w-full" style="margin-top: var(--spacing-xl);">
+                <span class="btn-text">Generate Template</span>
+                <div class="spinner hidden"></div>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-2" id="output-container" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-xl">Preview</h3>
+              <div class="toggle-group">
+                <button id="desktop-view-btn" class="toggle-btn active" data-view="desktop">Desktop</button>
+                <button id="mobile-view-btn" class="toggle-btn" data-view="mobile">Mobile</button>
+              </div>
+            </div>
+            <div class="preview-container">
+              <iframe id="preview-pane" title="Email Preview" class="preview-frame desktop"></iframe>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h3 class="text-xl">HTML Code</h3>
+              <div class="flex gap-2">
+                <button id="download-btn" class="btn btn-secondary btn-sm">Download HTML</button>
+                <button id="copy-btn" class="btn btn-primary btn-sm">Copy HTML</button>
+              </div>
+            </div>
+            <div class="code-container">
+              <pre><code id="code-block" class="code-block"></code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" id="output-placeholder">
+          <div class="card-body" style="text-align: center; padding: var(--spacing-3xl);">
+            <p class="text-lg" style="color: var(--label-secondary);">Your generated email will appear here.</p>
+          </div>
+        </section>
+
+        <footer style="text-align: center; margin-top: var(--spacing-3xl); color: var(--label-secondary);">
+          <p class="text-sm">Created by Jayden Wallace © 2025</p>
+        </footer>
+      </main>
+    </div>
+    
+    <!-- Design Customization Sidebar (Left) -->
+    <div id="design-sidebar" class="design-sidebar">
+      <div class="sidebar-header">
+        <h3 class="text-xl">Design Customization</h3>
+        <button type="button" id="close-design-sidebar" class="btn btn-secondary btn-sm" style="width: 32px; height: 32px; padding: 0; border-radius: 50%;">&times;</button>
+      </div>
+      <div class="sidebar-content">
+        <!-- Font Selection -->
+        <div class="design-option-group">
+          <h4>Email Font</h4>
+          <select id="design-font-family" name="design-font-family" class="form-control">
+            <option value="'Arial', sans-serif">Arial</option>
+            <option value="'Courier New', Courier, monospace">Courier New</option>
+            <option value="'Georgia', serif">Georgia</option>
+            <option value="'Helvetica', sans-serif">Helvetica</option>
+            <option value="'Lucida Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif">Lucida Sans</option>
+            <option value="'Tahoma', sans-serif">Tahoma</option>
+            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+            <option value="'Trebuchet MS', 'Helvetica', sans-serif">Trebuchet MS</option>
+            <option value="'Verdana', sans-serif">Verdana</option>
+          </select>
+        </div>
+
+        <!-- Color Schemes -->
+        <div class="design-option-group">
+          <h4>Color Schemes</h4>
+          <div class="color-scheme-grid">
+            <div class="color-scheme-option selected" data-scheme="modern">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #007aff;"></div>
+                <div class="color-dot" style="background: #ffffff;"></div>
+                <div class="color-dot" style="background: #f5f5f7;"></div>
+                <div class="color-dot" style="background: #1d1d1f;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Modern Blue</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Clean and professional</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="warm">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #ff6b35;"></div>
+                <div class="color-dot" style="background: #fff8f5;"></div>
+                <div class="color-dot" style="background: #ffeee6;"></div>
+                <div class="color-dot" style="background: #2d1810;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Warm Orange</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Friendly and inviting</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="elegant">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #6366f1;"></div>
+                <div class="color-dot" style="background: #fafafa;"></div>
+                <div class="color-dot" style="background: #f8fafc;"></div>
+                <div class="color-dot" style="background: #1e293b;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Elegant Purple</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Sophisticated and refined</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="nature">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #10b981;"></div>
+                <div class="color-dot" style="background: #f0fdf4;"></div>
+                <div class="color-dot" style="background: #ecfdf5;"></div>
+                <div class="color-dot" style="background: #14532d;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Nature Green</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Fresh and natural</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="corporate">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #374151;"></div>
+                <div class="color-dot" style="background: #ffffff;"></div>
+                <div class="color-dot" style="background: #f9fafb;"></div>
+                <div class="color-dot" style="background: #111827;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Corporate Gray</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Professional and trustworthy</div>
+            </div>
+            
+            <div class="color-scheme-option" data-scheme="vibrant">
+              <div class="color-scheme-preview">
+                <div class="color-dot" style="background: #ec4899;"></div>
+                <div class="color-dot" style="background: #fdf2f8;"></div>
+                <div class="color-dot" style="background: #fce7f3;"></div>
+                <div class="color-dot" style="background: #831843;"></div>
+              </div>
+              <div class="text-sm" style="font-weight: 590;">Vibrant Pink</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Bold and energetic</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layout Styles -->
+        <div class="design-option-group">
+          <h4>Layout Styles</h4>
+          <div class="layout-style-grid">
+            <div class="layout-option selected" data-layout="centered">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Centered Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Traditional centered content with equal margins</div>
+            </div>
+            
+            <div class="layout-option" data-layout="full-width">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Full Width Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Content spans the full width with edge-to-edge design</div>
+            </div>
+            
+            <div class="layout-option" data-layout="card-style">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Card Style Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Modern card-based layout with rounded corners</div>
+            </div>
+            
+            <div class="layout-option" data-layout="minimal">
+              <div class="text-sm" style="font-weight: 590; margin-bottom: 4px;">Minimal Layout</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Clean and spacious with lots of white space</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Button Styles -->
+        <div class="design-option-group">
+          <h4>Button Styles</h4>
+          <div class="button-style-grid">
+            <div class="button-style-option selected" data-button="rounded">
+              <div class="button-preview" style="background: #007aff; border-radius: 8px;">Rounded Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Modern rounded corners</div>
+            </div>
+            
+            <div class="button-style-option" data-button="pill">
+              <div class="button-preview" style="background: #007aff; border-radius: 20px;">Pill Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Fully rounded pill shape</div>
+            </div>
+            
+            <div class="button-style-option" data-button="square">
+              <div class="button-preview" style="background: #007aff; border-radius: 0px;">Square Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Classic square edges</div>
+            </div>
+            
+            <div class="button-style-option" data-button="outlined">
+              <div class="button-preview" style="background: transparent; border: 2px solid #007aff; color: #007aff; border-radius: 8px;">Outlined Button</div>
+              <div class="text-xs" style="color: var(--label-secondary);">Outline style with border</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Merge Fields Sidebar (Right) -->
+    <div id="merge-fields-sidebar" class="merge-fields-sidebar">
+      <div class="sidebar-header">
+        <h3 class="text-xl">Insert Merge Field</h3>
+        <button type="button" id="close-sidebar" class="btn btn-secondary btn-sm" style="width: 32px; height: 32px; padding: 0; border-radius: 50%;">&times;</button>
+      </div>
+      <div class="sidebar-content">
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            Recipient & Dealer
+            <span style="transform: rotate(0deg); transition: transform var(--transition-base);">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              <div class="merge-field-item" data-value="{{recipient.first_name}}">
+                <span>Recipient First Name</span>
+                <code class="merge-field-code">{{recipient.first_name}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.name}}">
+                <span>Dealership Name</span>
+                <code class="merge-field-code">{{dealership.name}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.phone_number}}">
+                <span>Dealership Phone</span>
+                <code class="merge-field-code">{{dealership.phone_number}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.address}}">
+                <span>Dealership Address</span>
+                <code class="merge-field-code">{{dealership.address}}</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            Customer Vehicle & Transaction
+            <span style="transform: rotate(0deg); transition: transform var(--transition-base);">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.year}}">
+                <span>Vehicle Year</span>
+                <code class="merge-field-code">{{customer.last_transaction.vehicle.year}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.make}}">
+                <span>Vehicle Make</span>
+                <code class="merge-field-code">{{customer.last_transaction.vehicle.make}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{customer.last_transaction.vehicle.model}}">
+                <span>Vehicle Model</span>
+                <code class="merge-field-code">{{customer.last_transaction.vehicle.model}}</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button type="button" class="accordion-header">
+            Website Links
+            <span style="transform: rotate(0deg); transition: transform var(--transition-base);">▼</span>
+          </button>
+          <div class="accordion-content">
+            <div class="accordion-body">
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_homepage_no_lp_url}}">
+                <span>Tracked Homepage (No LP)</span>
+                <code class="merge-field-code">{{dealership.tracked_website_homepage_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.tracked_website_service_no_lp_url}}">
+                <span>Tracked Service (No LP)</span>
+                <code class="merge-field-code">{{dealership.tracked_website_service_no_lp_url}}</code>
+              </div>
+              <div class="merge-field-item" data-value="{{dealership.website_homepage_url}}">
+                <span>Homepage URL</span>
+                <code class="merge-field-code">{{dealership.website_homepage_url}}</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    
+    <!-- Floating Action Buttons -->
+    <button type="button" id="floating-design-btn" class="fab fab-design" title="Design Customization">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+      </svg>
+    </button>
+    
+    <button type="button" id="floating-merge-btn" class="fab fab-merge" title="Insert Merge Fields">
+      <span style="font-family: var(--font-family-mono); font-size: 16px; font-weight: bold;">{{}}</span>
+    </button>
+
+    <script type="module" src="./index.ts"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

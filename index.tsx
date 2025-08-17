@@ -1,3 +1,5 @@
+
+
 /**
  * @license
  * Copyright Wallace, Jayden
@@ -418,7 +420,7 @@ const generateEmailHtml = (data: EmailData): string => {
                             </tr>
                             <tr><td style="font-size: ${layoutStyles.spacerHeight}; line-height: ${layoutStyles.spacerHeight};">&nbsp;</td></tr>
                             `: ''}
-                            ${offersHtml ? `<tr><td><table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">${offersHtml}</table></td></tr>` : '' }
+                            ${offersHtml}
                             ${footerCtasHtml}
                             ${ disclaimer ? `
                             <tr>

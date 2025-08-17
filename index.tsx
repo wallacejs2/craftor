@@ -1,5 +1,3 @@
-
-
 /**
  * @license
  * Copyright Wallace, Jayden
